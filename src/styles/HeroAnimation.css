@@ -1,0 +1,120 @@
+.hero-container {
+    height: 100vh;
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+    background-color: #1fa2d6; /* Fallback color */
+    background: radial-gradient(circle at top center, #3abff0 0%, #1fa2d6 70%);
+}
+
+.hero-bg {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    padding-top: 80px; /* Offset the absolute header to ensure true center */
+}
+
+.hero-title {
+    font-size: 5.5rem;
+    color: white;
+    margin-bottom: 50px;
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: 2px;
+    text-shadow: 2px 4px 10px rgba(0, 0, 0, 0.15);
+    text-align: center;
+    z-index: 10;
+    padding: 0 20px;
+}
+
+/* Outer GSAP Wrapper */
+.hero-cone-wrapper {
+    position: relative;
+    z-index: 5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Inner CSS Animated Cone */
+.hero-cone {
+    width: 250px;
+    will-change: transform;
+    animation: floatUpDown 4s ease-in-out infinite;
+    mix-blend-mode: multiply; /* Assures transparent bg if JPEG without killing transparency of PNG */
+    filter: drop-shadow(0px 15px 25px rgba(0, 0, 0, 0.4));
+}
+
+@keyframes floatUpDown {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-20px); }
+    100% { transform: translateY(0px); }
+}
+
+/* Floating Ingredients */
+.floating-ing {
+    position: absolute;
+    width: 110px;
+    z-index: 4;
+    filter: drop-shadow(0px 10px 15px rgba(0,0,0,0.2));
+    animation: floatUpDown 5s ease-in-out infinite;
+    mix-blend-mode: multiply; 
+}
+
+.mango-float {
+    left: 15%;
+    top: 35%;
+    animation-delay: 1s; 
+    transform: rotate(-10deg);
+}
+
+.strawberry-float {
+    right: 15%;
+    top: 40%;
+    animation-delay: 2.5s;
+    transform: rotate(15deg);
+}
+
+/* Existing sprinkles setup */
+.sprinkles span {
+    position: absolute;
+    width: 8px;
+    height: 20px;
+    background: #ffde59;
+    animation: float 4s infinite;
+}
+
+@keyframes float {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-30px); }
+    100% { transform: translateY(0); }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .hero-title {
+        font-size: 3rem;
+        margin-bottom: 30px;
+    }
+    
+    .hero-cone {
+        width: 160px;
+    }
+
+    .floating-ing {
+        width: 75px;
+    }
+
+    .mango-float {
+        left: 5%;
+        top: 25%;
+    }
+
+    .strawberry-float {
+        right: 5%;
+        top: 20%;
+    }
+}
