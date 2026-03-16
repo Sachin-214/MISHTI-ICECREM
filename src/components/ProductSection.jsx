@@ -38,8 +38,12 @@ export default function ProductSection({ title, products, accentColor }) {
             }
             style={{ backgroundColor: accentColor }}
         >
-            <div className="section-header">
+            <div className={`section-header ${title === "POPULAR SCOOP FLAVORS" ? "popular-header" : ""}`}>
+                {title === "POPULAR SCOOP FLAVORS" && (
+                    <img src="/assets/images/popular-heart.png" alt="" className="popular-heart" />
+                )}
                 <h2>{title}</h2>
+                {title === "POPULAR SCOOP FLAVORS" && <span className="title-dash">-</span>}
                 <div className="section-divider" />
             </div>
             <div className="product-grid">

@@ -7,6 +7,9 @@ export default function DistributorPage() {
         <div className="distributor-page">
             <header className="main-header">
                 <div className="header-center">
+                    <a className="header-link" href="#/about">
+                        About Us
+                    </a>
                     <a href="#/home" aria-label="Mishti Icecream Home">
                         <img
                             src="/assets/images/logo.png"
@@ -19,9 +22,6 @@ export default function DistributorPage() {
                     </a>
                     <a className="header-link" href="#/contact">
                         Contact Us
-                    </a>
-                    <a className="header-link" href="#/about">
-                        About Us
                     </a>
                 </div>
             </header>

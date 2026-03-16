@@ -33,6 +33,9 @@ export default function ContactPage() {
         <div className="contact-page" ref={pageRef}>
             <header className="main-header">
                 <div className="header-center">
+                    <a className="header-link" href="#/about">
+                        About Us
+                    </a>
                     <a href="#/home" aria-label="Mishti Icecream Home">
                         <img
                             src="/assets/images/logo.png"
@@ -42,9 +45,6 @@ export default function ContactPage() {
                     </a>
                     <a className="header-link" href="#/products">
                         Products
-                    </a>
-                    <a className="header-link" href="#/about">
-                        About Us
                     </a>
                     <a className="header-link" href="#/contact">
                         Contact Us

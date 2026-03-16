@@ -1,16 +1,8 @@
 const products = [
     {
-        id: 1,
-        name: "Vanilla",
-        category: "Small Cups (35 ML)",
-        size: "35 ML",
-        price: "₹7",
-        image: "/assets/products/sample.png"
-    },
-    {
         id: 2,
         name: "Vanilla",
-        category: "Large Cups (60 ML)",
+        category: "POPULAR SCOOP FLAVORS",
         size: "60 ML",
         price: "₹10",
         image: "/assets/products/sample.png"
@@ -18,7 +10,7 @@ const products = [
     {
         id: 3,
         name: "Strawberry",
-        category: "Large Cups (60 ML)",
+        category: "POPULAR SCOOP FLAVORS",
         size: "60 ML",
         price: "₹10",
         image: "/assets/products/sample.png"
@@ -26,7 +18,7 @@ const products = [
     {
         id: 4,
         name: "Plain Pista",
-        category: "Large Cups (60 ML)",
+        category: "POPULAR SCOOP FLAVORS",
         size: "60 ML",
         price: "₹15",
         image: "/assets/products/sample.png"
@@ -341,6 +333,7 @@ const products = [
         category: "Combi Pack",
         size: "700 ML + 700 ML",
         price: "₹200",
+        badge: "BUY 1 GET 1",
         image: "/assets/products/sample.png"
     },
     {
@@ -349,6 +342,7 @@ const products = [
         category: "Combi Pack",
         size: "700 ML + 700 ML",
         price: "₹200",
+        badge: "BUY 1 GET 1",
         image: "/assets/products/sample.png"
     },
     {
@@ -357,6 +351,7 @@ const products = [
         category: "Combi Pack",
         size: "700 ML + 700 ML",
         price: "₹200",
+        badge: "BUY 1 GET 1",
         image: "/assets/products/sample.png"
     },
     {
@@ -365,6 +360,7 @@ const products = [
         category: "Combi Pack",
         size: "700 ML + 700 ML",
         price: "₹220",
+        badge: "BUY 1 GET 1",
         image: "/assets/products/sample.png"
     },
     {
@@ -373,6 +369,7 @@ const products = [
         category: "Combi Pack",
         size: "700 ML + 700 ML",
         price: "₹240",
+        badge: "BUY 1 GET 1",
         image: "/assets/products/sample.png"
     },
     {
@@ -381,6 +378,7 @@ const products = [
         category: "Combi Pack",
         size: "700 ML + 700 ML",
         price: "₹240",
+        badge: "BUY 1 GET 1",
         image: "/assets/products/sample.png"
     },
     {
@@ -389,6 +387,7 @@ const products = [
         category: "Combi Pack",
         size: "700 ML + 700 ML",
         price: "₹260",
+        badge: "BUY 1 GET 1",
         image: "/assets/products/sample.png"
     },
     {
@@ -397,6 +396,7 @@ const products = [
         category: "Combi Pack",
         size: "700 ML + 700 ML",
         price: "₹280",
+        badge: "BUY 1 GET 1",
         image: "/assets/products/sample.png"
     },
     {
@@ -405,6 +405,135 @@ const products = [
         category: "Combi Pack",
         size: "700 ML + 700 ML",
         price: "₹280",
+        badge: "BUY 1 GET 1",
+        image: "/assets/products/sample.png"
+    },
+    {
+        id: 52,
+        name: "Vanilla",
+        category: "Gallon Pack",
+        size: "4 Litre",
+        price: "₹400",
+        image: "/assets/products/sample.png"
+    },
+    {
+        id: 53,
+        name: "Strawberry",
+        category: "Gallon Pack",
+        size: "4 Litre",
+        price: "₹400",
+        image: "/assets/products/sample.png"
+    },
+    {
+        id: 54,
+        name: "Plain Pista",
+        category: "Gallon Pack",
+        size: "4 Litre",
+        price: "₹450",
+        image: "/assets/products/sample.png"
+    },
+    {
+        id: 55,
+        name: "Butter Scotch",
+        category: "Gallon Pack",
+        size: "4 Litre",
+        price: "₹490",
+        image: "/assets/products/sample.png"
+    },
+    {
+        id: 56,
+        name: "Mango Ripple",
+        category: "Gallon Pack",
+        size: "4 Litre",
+        price: "₹550",
+        image: "/assets/products/sample.png"
+    },
+    {
+        id: 57,
+        name: "Black Current Ripple",
+        category: "Gallon Pack",
+        size: "4 Litre",
+        price: "₹550",
+        image: "/assets/products/sample.png"
+    },
+    {
+        id: 58,
+        name: "Strawberry Ripple",
+        category: "Gallon Pack",
+        size: "4 Litre",
+        price: "₹550",
+        image: "/assets/products/sample.png"
+    },
+    {
+        id: 59,
+        name: "Chocolate Ripple",
+        category: "Gallon Pack",
+        size: "4 Litre",
+        price: "₹550",
+        image: "/assets/products/sample.png"
+    },
+    {
+        id: 60,
+        name: "Plain Chocolate",
+        category: "Gallon Pack",
+        size: "4 Litre",
+        price: "₹575",
+        image: "/assets/products/sample.png"
+    },
+    {
+        id: 61,
+        name: "Mango",
+        category: "Gallon Pack",
+        size: "4 Litre",
+        price: "₹575",
+        image: "/assets/products/sample.png"
+    },
+    {
+        id: 62,
+        name: "Kaju Draksh",
+        category: "Gallon Pack",
+        size: "4 Litre",
+        price: "₹600",
+        image: "/assets/products/sample.png"
+    },
+    {
+        id: 63,
+        name: "Tutti Frutti",
+        category: "Gallon Pack",
+        size: "4 Litre",
+        price: "₹600",
+        image: "/assets/products/sample.png"
+    },
+    {
+        id: 64,
+        name: "Choco Chips",
+        category: "Gallon Pack",
+        size: "4 Litre",
+        price: "₹700",
+        image: "/assets/products/sample.png"
+    },
+    {
+        id: 65,
+        name: "Kesar Pista",
+        category: "Gallon Pack",
+        size: "4 Litre",
+        price: "₹800",
+        image: "/assets/products/sample.png"
+    },
+    {
+        id: 66,
+        name: "Raj Bhog",
+        category: "Gallon Pack",
+        size: "4 Litre",
+        price: "₹900",
+        image: "/assets/products/sample.png"
+    },
+    {
+        id: 67,
+        name: "American Dry Fruit",
+        category: "Gallon Pack",
+        size: "4 Litre",
+        price: "₹900",
         image: "/assets/products/sample.png"
     }
 ];

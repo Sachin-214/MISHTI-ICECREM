@@ -148,6 +148,9 @@ export default function Home() {
             {/* HEADER WITH LOGO */}
             <header className="main-header">
                 <div className="header-center">
+                    <a className="header-link" href="#/about">
+                        About Us
+                    </a>
                     <a href="#/home" aria-label="Mishti Icecream Home">
                         <img
                             src="/assets/images/logo.png"
@@ -157,9 +160,6 @@ export default function Home() {
                     </a>
                     <a className="header-link" href="#/products">
                         Products
-                    </a>
-                    <a className="header-link" href="#/about">
-                        About Us
                     </a>
                     <a className="header-link" href="#/contact">
                         Contact Us
@@ -208,13 +208,13 @@ export default function Home() {
                             take you to a land of pure ecstasy.
                         </p>
                         <div className="hero-actions">
-                            <button className="hero-btn primary magnetic-btn">
+                            <a href="#/products" className="hero-btn primary magnetic-btn">
                                 <span className="btn-text">Scoop It Up</span>
                                 <span className="btn-icon" aria-hidden="true">→</span>
-                            </button>
-                            <button className="hero-btn ghost">
+                            </a>
+                            <a href="#/products" className="hero-btn ghost">
                                 View Flavors
-                            </button>
+                            </a>
                         </div>
                     </div>
                     <div className="hero-visual">
@@ -231,11 +231,13 @@ export default function Home() {
             </section>
 
             <section className="popular-section reveal-on-scroll">
-                <div className="section-head">
-                    <h2>
-                        <span>Popular Scoop Flavors</span>
-                    </h2>
-                    <button className="hero-btn ghost">View Flavors</button>
+                <div className="section-head popular-scoop-head">
+                    <div className="popular-title-wrapper">
+                        <img src="/assets/images/popular-heart.png" alt="" className="popular-heart" />
+                        <h2>Popular Scoop Flavors</h2>
+                        <span className="title-dash">-</span>
+                    </div>
+                    <a href="#/products" className="hero-btn ghost">View Flavors</a>
                 </div>
                 <div className="popular-grid">
                     {[
@@ -285,28 +287,46 @@ export default function Home() {
                 </div>
             </section>
 
-            <section className="feature-flavor reveal-on-scroll">
-                <div className="feature-copy">
-                    <span className="feature-tag">Moroccan Honey Nut</span>
-                    <h2>With Vanilla Essence</h2>
-                    <p>
-                        A sweet, nutty scoop with honeyed warmth and silky
-                        vanilla. Crafted to melt like memories.
-                    </p>
-                    <div className="hero-actions">
-                        <button className="hero-btn primary">View Flavors</button>
-                        <button className="hero-btn ghost">Find Shops</button>
+            <section className="feature-art-section reveal-on-scroll">
+                <div className="art-collage-container">
+                    {/* Floating Images */}
+                    <div className="art-img img-peanuts" data-float="0.4">
+                        <img src="/assets/images/collage-1.png" alt="Honey Nut" />
                     </div>
-                </div>
-                <div className="feature-visual">
-                    <div className="feature-card orange" data-float="0.4">
-                        <img src="/assets/products/twix.jpg.jpeg" alt="Honey nut cup" />
+                    <div className="art-img img-lime" data-float="0.6">
+                        <img src="/assets/images/collage-3.png" alt="Lime & Chili" />
                     </div>
-                    <div className="feature-card cream" data-float="0.3">
-                        <img src="/assets/products/sample.png" alt="Vanilla cups" />
+                    <div className="art-img img-spread" data-float="0.2">
+                        <img src="/assets/images/collage-2.png" alt="Ice Cream Spread" />
                     </div>
-                    <div className="feature-card sky" data-float="0.5">
-                        <img src="/assets/TWIXCHOCOBAR.png" alt="Coco lime bar" />
+
+                    {/* Central Title Group */}
+                    <div className="art-title-group">
+                        <div className="title-row-upper">
+                            <h1>MOROCCAN</h1>
+                            <img src="/assets/images/cone-doodle.png" alt="" className="cone-doodle" />
+                        </div>
+                        <div className="title-row-lower">
+                            <img src="/assets/images/pink-heart.png" alt="" className="pink-heart-doodle" />
+                            <h1>HONEY NUT</h1>
+                        </div>
+                    </div>
+
+                    {/* Bottom Left Detail */}
+                    <div className="art-footer-detail">
+                        <img src="/assets/images/pink-scoop.png" alt="" className="mini-scoop" />
+                        <div className="detail-text">
+                            <span className="with-text">WITH</span>
+                            <span className="essence-text">VANILLA ESSENCE</span>
+                        </div>
+                    </div>
+
+                    {/* Decorative Doodles */}
+                    <div className="art-doodles">
+                        <div className="squiggle sq-1"></div>
+                        <div className="sprinkle sp-1"></div>
+                        <div className="sprinkle sp-2"></div>
+                        <div className="sprinkle sp-3"></div>
                     </div>
                 </div>
             </section>
@@ -357,8 +377,8 @@ export default function Home() {
                         that reflect quality, craft, and fun.
                     </p>
                     <div className="hero-actions">
-                        <button className="hero-btn primary">View Flavors</button>
-                        <button className="hero-btn ghost">Find Shops</button>
+                        <a href="#/products" className="hero-btn primary">View Flavors</a>
+                        <a href="#/contact" className="hero-btn ghost">Find Shops</a>
                     </div>
                 </div>
             </section>

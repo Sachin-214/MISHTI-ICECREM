@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Arvo:wght@700&family=Fredoka:wght@400;600;700;800&family=Nunito:wght@400;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Arvo:wght@700&family=Fredoka:wght@400;600;700;800&family=Nunito:wght@400;600;700&family=Nosifer&family=Lilita+One&display=swap");
 
 :root {
     --choco: #3b2316;
@@ -33,7 +33,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 40px 6vw 30px;
+    padding: 1.5cm 6vw 30px;
     min-height: 160px;
     background-image: url("/assets/images/header-drip.png");
     background-repeat: repeat-x;
@@ -44,7 +44,9 @@ body {
 .header-center {
     display: flex;
     align-items: center;
-    gap: 18px;
+    justify-content: center;
+    gap: 2vw;
+    width: 100%;
 }
 
 .main-header .logo {
@@ -60,18 +62,20 @@ body {
     align-items: center;
     justify-content: center;
     padding: 10px 20px;
-    border-radius: 999px;
-    background: rgba(255, 255, 255, 0.85);
-    color: #1d2c3f;
+    background: none;
+    color: #4E342E;
+    font-family: 'Nosifer', cursive;
+    font-size: 20px;
+    letter-spacing: 2px;
     font-weight: 700;
+    text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
     text-decoration: none;
-    box-shadow: 0 10px 20px rgba(17, 34, 56, 0.12);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transition: transform 0.2s ease, color 0.2s ease;
 }
 
 .header-link:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 14px 24px rgba(17, 34, 56, 0.18);
+    transform: translateY(3px);
+    color: #5D4037;
 }
 
 .promo-strip {
@@ -296,17 +300,24 @@ body {
 }
 
 .hero-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
     border-radius: 999px;
-    padding: 12px 24px;
+    padding: 12px 28px;
     border: 2px solid var(--choco);
     background: #fff;
-    font-weight: 800;
+    font-family: 'Lilita One', cursive;
+    font-weight: 400;
+    font-size: 1.1rem;
     text-transform: uppercase;
-    letter-spacing: 0.06em;
+    letter-spacing: 1px;
     cursor: pointer;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transition: all 0.2s ease;
     position: relative;
     overflow: hidden;
+    color: var(--choco);
 }
 
 .hero-btn.primary {
@@ -452,18 +463,33 @@ body {
     margin-bottom: 26px;
 }
 
-.section-head h2 {
-    font-family: "Fredoka", sans-serif;
-    font-size: clamp(1.8rem, 3vw, 2.6rem);
-    margin: 0;
+.popular-title-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.popular-scoop-head h2 {
+    font-family: 'Lilita One', cursive !important;
     text-transform: uppercase;
-    letter-spacing: 0.04em;
-    color: #2a1810;
-    text-shadow:
-        -2px -2px 0 #fff,
-        2px -2px 0 #fff,
-        -2px 2px 0 #fff,
-        2px 2px 0 #fff;
+    font-size: clamp(1.8rem, 3.2vw, 2.5rem) !important;
+    color: var(--choco) !important;
+    text-shadow: none !important;
+    letter-spacing: 1.5px;
+    margin: 0 !important;
+}
+
+.title-dash {
+    font-family: 'Lilita One', cursive;
+    font-size: 2.2rem;
+    color: var(--choco);
+    margin-left: 4px;
+}
+
+.popular-heart {
+    width: 45px;
+    height: auto;
+    object-fit: contain;
 }
 
 .popular-grid {
@@ -522,183 +548,304 @@ body {
 
 .flavor-strip {
     margin: 0 6vw 80px;
-    border: 2px solid rgba(42, 24, 16, 0.7);
-    border-radius: 20px;
-    background: #fff;
+    border-top: 2px solid #3b2316;
+    border-bottom: 2px solid #3b2316;
+    background: #ffffff;
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    overflow: hidden;
+    grid-template-columns: 25% 1fr 30%;
     position: relative;
+    padding-bottom: 20px;
 }
 
 .strip-item {
-    padding: 26px 28px;
-    text-align: center;
-    display: grid;
-    align-items: center;
+    padding: 35px 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     position: relative;
 }
 
 .strip-item::after {
     content: "";
     position: absolute;
-    top: 18px;
-    bottom: 18px;
+    top: 0;
+    bottom: 0;
     right: 0;
-    width: 1px;
-    background: rgba(59, 35, 22, 0.2);
+    width: 2px;
+    background: #3b2316;
 }
 
 .strip-item:last-child::after {
-    content: none;
-}
-
-.strip-item h3 {
-    font-family: "Fredoka", sans-serif;
-    margin: 0;
-}
-
-.strip-highlight {
-    background: #fff;
-    font-weight: 700;
-}
-
-.strip-reviews {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 16px;
-    font-weight: 800;
-}
-
-.reviews-number {
-    font-size: 2.2rem;
-    color: #ff7a2a;
-}
-
-.strip-title {
-    text-align: left;
-    font-weight: 800;
+    display: none;
 }
 
 .strip-title h3 {
-    margin: 0;
-    font-size: 1.35rem;
-    letter-spacing: 0.04em;
+    font-family: 'Lilita One', cursive !important;
+    font-size: 2rem !important;
+    line-height: 1.1;
+    color: #3b2316;
     text-transform: uppercase;
-    color: #2a1810;
-    font-family: "Arvo", "Rockwell", "Trebuchet MS", serif;
-    text-shadow:
-        0.6px 0.6px 0 rgba(0, 0, 0, 0.25),
-        -0.4px 0.2px 0 rgba(0, 0, 0, 0.2);
+    text-align: left;
+    text-shadow: none !important;
+}
+
+.strip-highlight p {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #3b2316;
+    max-width: 500px;
+    margin: 0 auto;
+    text-align: center;
+    line-height: 1.4;
+}
+
+.strip-reviews {
+    flex-direction: row;
+    align-items: center;
+    gap: 15px;
 }
 
 .review-avatars {
     display: flex;
-    align-items: center;
-    gap: 8px;
 }
 
 .review-avatars img {
-    width: 40px;
-    height: 40px;
+    width: 45px;
+    height: 45px;
     border-radius: 50%;
-    border: 2px solid #2a1810;
-    object-fit: cover;
+    border: 2px solid #ffffff;
+    margin-left: -12px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.review-avatars img:first-child {
+    margin-left: 0;
 }
 
 .review-copy {
-    display: grid;
-    gap: 4px;
-    text-align: left;
+    display: flex;
+    flex-direction: column;
+}
+
+.reviews-number {
+    font-family: 'Lilita One', cursive;
+    font-size: 2rem;
+    color: #ff5200;
+    line-height: 1;
+    border: none !important;
+    padding: 0 !important;
+}
+
+.review-copy span:last-child {
+    font-size: 0.9rem;
+    font-weight: 800;
+    color: #3b2316;
 }
 
 .strip-strawberries {
     position: absolute;
-    left: 50%;
-    bottom: -12px;
-    display: flex;
-    gap: 2px;
-    transform: translateX(-50%) rotate(-4deg);
+    left: 21%;
+    bottom: -15px;
+    z-index: 10;
 }
 
-.strip-strawberries img {
-    width: 70px;
+/* ARTISTIC COLLAGE SECTION */
+.feature-art-section {
+    padding: 100px 6vw 150px;
+    background: #ffffff;
+    overflow: hidden;
+}
+
+.art-collage-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+    min-height: 800px;
+}
+
+.art-title-group {
+    position: absolute;
+    top: 42%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+    text-align: center;
+}
+
+.title-row-upper, .title-row-lower {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+
+.art-title-group h1 {
+    font-family: 'Lilita One', cursive;
+    font-size: clamp(3rem, 8vw, 6rem);
+    color: #3b2316;
+    margin: 0;
+    line-height: 0.9;
+}
+
+.pink-heart-doodle {
+    width: clamp(60px, 10vw, 100px);
+    height: auto;
+    transform: rotate(-10deg);
+}
+
+.cone-doodle {
+    width: clamp(50px, 8vw, 80px);
+    height: auto;
+    transform: rotate(15deg) translateY(-20px);
+}
+
+.art-img {
+    position: absolute;
+    border-radius: 30px;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+}
+
+.art-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.img-peanuts {
+    left: 0;
+    top: 15%;
+    width: 320px;
+    height: 400px;
+    z-index: 5;
+}
+
+.img-lime {
+    right: 0;
+    top: 10%;
+    width: 250px;
+    height: 450px;
+    z-index: 5;
+}
+
+.img-spread {
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 550px;
+    height: 380px;
+    z-index: 4;
+}
+
+.art-footer-detail {
+    position: absolute;
+    bottom: 5%;
+    left: 2%;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    z-index: 20;
+}
+
+.mini-scoop {
+    width: 80px;
     height: auto;
 }
 
-.strip-item::after {
-    background: rgba(42, 24, 16, 0.55);
+.detail-text {
+    display: flex;
+    flex-direction: column;
 }
 
-.reviews-number {
-    color: #2a1810;
-    border: 2px solid #2a1810;
+.with-text {
+    font-weight: 900;
+    font-size: 1.2rem;
+    color: #3b2316;
+}
+
+.essence-text {
+    font-weight: 900;
+    font-size: 1.8rem;
+    color: #122132;
+    background: linear-gradient(to right, #ffbedc 0%, #ffbedc 100%);
+    background-size: 100% 40%;
+    background-repeat: no-repeat;
+    background-position: 0 95%;
+}
+
+.art-doodles {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 15;
+}
+
+.squiggle {
+    position: absolute;
+    width: 60px;
+    height: 30px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='30' viewBox='0 0 60 30'%3E%3Cpath d='M0 15 Q 15 0, 30 15 T 60 15' fill='none' stroke='%233b2316' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+.sq-1 {
+    right: 18%;
+    bottom: 25%;
+    transform: rotate(10deg);
+}
+
+.sprinkle {
+    position: absolute;
+    width: 15px;
+    height: 6px;
+    background: #3b2316;
     border-radius: 999px;
-    padding: 4px 12px;
-    display: inline-block;
-    width: fit-content;
+    opacity: 0.8;
 }
 
-/* Feature flavor */
+.sp-1 { right: 10%; bottom: 15%; transform: rotate(45deg); }
+.sp-2 { right: 8%; bottom: 20%; transform: rotate(-30deg); }
+.sp-3 { right: 12%; bottom: 10%; transform: rotate(15deg); }
 
-.feature-flavor {
-    padding: 0 6vw 90px;
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 40px;
-    align-items: center;
+@media (max-width: 1024px) {
+    .art-collage-container {
+        min-height: 1200px;
+    }
+    .img-peanuts, .img-lime {
+        width: 250px;
+        height: 350px;
+    }
+    .img-spread {
+        width: 100%;
+        max-width: 500px;
+    }
 }
 
-.feature-copy h2 {
-    font-family: "Fredoka", sans-serif;
-    font-size: clamp(2rem, 3.5vw, 3.2rem);
-    margin: 12px 0;
-}
-
-.feature-tag {
-    text-transform: uppercase;
-    font-weight: 800;
-    letter-spacing: 0.25em;
-    font-size: 0.75rem;
-    color: #ff7a2a;
-}
-
-.feature-copy p {
-    max-width: 520px;
-}
-
-.feature-visual {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 20px;
-    position: relative;
-}
-
-.feature-card {
-    border-radius: 18px;
-    padding: 18px;
-    border: 3px solid var(--choco);
-    box-shadow: 0 16px 28px rgba(59, 35, 22, 0.15);
-    background: #fff;
-}
-
-.feature-card img {
-    width: 100%;
-    border-radius: 12px;
-}
-
-.feature-card.orange {
-    background: #ffb24a;
-}
-
-.feature-card.cream {
-    background: #ffe7c4;
-}
-
-.feature-card.sky {
-    background: #bfe4f7;
-    grid-column: span 2;
+@media (max-width: 768px) {
+    .art-collage-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-height: auto;
+        gap: 40px;
+    }
+    .art-img {
+        position: static;
+        transform: none !important;
+        width: 100%;
+        height: 300px;
+    }
+    .art-title-group {
+        position: static;
+        transform: none;
+        order: -1;
+    }
+    .art-footer-detail {
+        position: static;
+        margin-top: 20px;
+    }
 }
 
 /* Exotic flavors */
@@ -1002,7 +1149,7 @@ body {
 
     .header-link {
         padding: 8px 16px;
-        font-size: 0.9rem;
+        font-size: 18px;
     }
 
     .hero-card {
