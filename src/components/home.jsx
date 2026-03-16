@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import "../styles/home.css";
@@ -7,6 +7,16 @@ import Footer from "./Footer";
 gsap.registerPlugin(ScrollTrigger);
 
 export default function Home() {
+    const rowRef = useRef(null);
+
+    const handleScroll = (direction) => {
+        const verticalShift = 500; // Amount of vertical scroll to move cards horizontally
+        window.scrollBy({
+            top: direction === "next" ? verticalShift : -verticalShift,
+            behavior: "smooth"
+        });
+    };
+
     useEffect(() => {
         const ctx = gsap.context(() => {
             gsap.utils.toArray(".reveal-on-scroll").forEach((element) => {
@@ -132,6 +142,46 @@ export default function Home() {
                             trigger: ".sweet-section",
                             start: "top 80%",
                             once: true
+                        }
+                    }
+                );
+            });
+
+            // Horizontal pinning effect for Exotic Flavors
+            const exoticRow = rowRef.current;
+            if (exoticRow) {
+                const totalCardsWidth = exoticRow.scrollWidth;
+                const windowWidth = window.innerWidth;
+                const skipAmount = totalCardsWidth - windowWidth + 200; // Extra buffer to unveil all
+
+                gsap.to(exoticRow, {
+                    x: -skipAmount,
+                    ease: "none",
+                    scrollTrigger: {
+                        trigger: ".exotic-section",
+                        pin: true,
+                        start: "top top",
+                        end: () => `+=${skipAmount + 400}`, // Duration of the pin
+                        scrub: 1.2,
+                        invalidateOnRefresh: true,
+                        anticipatePin: 1
+                    }
+                });
+            }
+
+            // Speedy Caramel Droplets Motion
+            gsap.utils.toArray(".shaving").forEach((shaving, i) => {
+                const speed = 1.2 + (i % 3); // Varied fast speeds
+                gsap.fromTo(shaving, 
+                    { y: 180 }, // Start lower
+                    {
+                        y: -300, // Move high up
+                        ease: "none",
+                        scrollTrigger: {
+                            trigger: ".sweet-section",
+                            start: "top bottom",
+                            end: "bottom top",
+                            scrub: speed // Creates a 'speedy up' effect on scroll down
                         }
                     }
                 );
@@ -331,65 +381,146 @@ export default function Home() {
                 </div>
             </section>
 
-            <section className="exotic-section reveal-on-scroll">
+            <section className="exotic-section">
                 <div className="section-head">
                     <h2>Exoteric Flavors</h2>
                     <div className="exotic-nav">
-                        <button className="circle-btn" aria-label="Previous">
+                        <button className="circle-btn" aria-label="Previous" onClick={() => handleScroll("prev")}>
                             ←
                         </button>
-                        <button className="circle-btn" aria-label="Next">
+                        <button className="circle-btn" aria-label="Next" onClick={() => handleScroll("next")}>
                             →
                         </button>
                     </div>
                 </div>
-                <div className="exotic-doodles" aria-hidden="true">
-                    <span className="doodle dot" />
-                    <span className="doodle swirl" />
-                    <span className="doodle sprinkle" />
-                </div>
-                <div className="exotic-row">
+                <div className="exotic-row" ref={rowRef}>
                     {[
-                        { name: "Spicy PB", image: "/assets/RAJABAR.png", tone: "violet" },
-                        { name: "Honey Nut", image: "/assets/products/RAJBHOG.jpeg", tone: "pink" },
-                        { name: "Vanilla Chai", image: "/assets/products/sample.png", tone: "orange" },
-                        { name: "Turkish Mocha", image: "/assets/products/twix.jpg.jpeg", tone: "yellow" }
+                        { name: "American Nut", tone: "violet" },
+                        { name: "Raj Bhog", tone: "pink" },
+                        { name: "Kesar Pista", tone: "orange" },
+                        { name: "Yellow Grid", tone: "olive" },
+                        { name: "Geometric Grove", tone: "teal" }
                     ].map((item) => (
-                        <div className={`exotic-badge pop-on-scroll ${item.tone}`} key={item.name}>
-                            <div className="exotic-shape">
-                                <img src={item.image} alt={item.name} />
+                        <div className={`exotic-badge-container pop-on-scroll ${item.tone}`} key={item.name}>
+                            <span className="exotic-label">{item.name}</span>
+                            <div className={`exotic-badge ${item.tone}`}>
+                                {item.tone === 'pink' ? (
+                                    <div className="exotic-rotator">
+                                        <div className="exotic-shape" />
+                                    </div>
+                                ) : (
+                                    <div className="exotic-shape" />
+                                )}
                             </div>
-                            <span>{item.name}</span>
                         </div>
                     ))}
-                    <div className="exotic-stamp">No.1</div>
+                    <div className="exotic-stamp-wrapper">
+                        <div className="exotic-stamp">
+                            <svg viewBox="0 0 200 200" className="stamp-svg">
+                                <path id="curve" d="M 40, 100 A 60,60 0 1,1 160,100 A 60,60 0 1,1 40,100" fill="transparent" />
+                                <text className="stamp-text">
+                                    <textPath href="#curve" startOffset="0%">
+                                        HIGHEST SELLING ICE CREAM • HIGHEST SELLING ICE CREAM •
+                                    </textPath>
+                                </text>
+                            </svg>
+                            <div className="stamp-center">
+                                <span className="no-1">NO<br/>.1</span>
+                            </div>
+                            <div className="stamp-sparkles">
+                                <span className="sparkle s1">✦</span>
+                                <span className="sparkle s2">✦</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </section>
 
             <section className="memories-section reveal-on-scroll">
-                <div className="memories-visual" data-float="0.3">
-                    <img src="/assets/products/sample-icecream.png" alt="Ice cream lover" />
+                {/* Decorative Sprinkles - Scattered across the section */}
+                <div className="memories-sprinkles">
+                    {[...Array(12)].map((_, i) => (
+                        <span key={i} className={`memories-sprinkle s${i + 1}`}></span>
+                    ))}
                 </div>
+
+                <div className="memories-visual-container">
+                    <div className="memories-visual-frame">
+                        <div className="memories-sunburst">
+                            {[...Array(12)].map((_, i) => (
+                                <div key={i} className="sunburst-beam" style={{ transform: `rotate(${i * 30}deg)` }} />
+                            ))}
+                        </div>
+                        <img 
+                            src="/assets/images/happy-man-icecream.png" 
+                            alt="Happy person with ice cream" 
+                            className="memories-hero-img"
+                        />
+                    </div>
+                    <img src="/assets/images/pink-heart-3d.png" alt="Love icon" className="floating-heart" />
+                </div>
+
                 <div className="memories-copy">
-                    <h2>We Offer Ice Cream That Evoke Memories.</h2>
-                    <p>
-                        Delight in exquisite ice cream from elegant desserts
-                        that reflect quality, craft, and fun.
+                    <div className="truffle-badge">
+                        <img src="/assets/images/chocolate-truffle.png" alt="Chocolate scoop" />
+                    </div>
+                    <h2 className="memories-heading">
+                        WE OFFER <br />
+                        ICECREAM THAT <br />
+                        EVOKE MEMORIES.
+                    </h2>
+                    <p className="memories-description">
+                        You will have a great time with to our delicious desserts. 
+                        Delight in exquisite ice-cream, from elegant desserts, 
+                        which reflect quality.
                     </p>
-                    <div className="hero-actions">
-                        <a href="#/products" className="hero-btn primary">View Flavors</a>
-                        <a href="#/contact" className="hero-btn ghost">Find Shops</a>
+                    <div className="memories-actions">
+                        <a href="#/products" className="memories-btn-primary">
+                            VIEW FLAVORS <span>&gt;</span>
+                        </a>
+                        <a href="#/contact" className="memories-btn-ghost">
+                            <div className="map-marker-container">
+                                <div className="map-folded"></div>
+                                <div className="map-pin">
+                                    <span className="pin-head"></span>
+                                </div>
+                            </div>
+                            FIND SHOPS
+                        </a>
                     </div>
                 </div>
             </section>
 
             <section className="sweet-section reveal-on-scroll">
-                <h2>Sweet Cold Creamy</h2>
-                <div className="sweet-doodles" aria-hidden="true">
-                    <span className="sweet-sprinkle" />
-                    <span className="sweet-sprinkle" />
-                    <span className="sweet-sprinkle" />
+                <div className="sweet-heading-wrapper">
+                    <h2 className="sweet-title">SWEET COLD CREAMY</h2>
+                    {/* Chocolate Splatter Shavings */}
+                    <div className="shaving-splatter">
+                        {[...Array(60)].map((_, i) => {
+                            const size = Math.floor(Math.random() * 8) + 4; // 4px to 12px
+                            const left = Math.floor(Math.random() * 110) - 5; // -5% to 105%
+                            const top = Math.floor(Math.random() * 130) - 15; // -15% to 115%
+                            const opacity = Math.random() * 0.4 + 0.6; // 0.6 to 1.0
+                            const rotate = Math.floor(Math.random() * 360);
+                            
+                            return (
+                                <div 
+                                    key={i} 
+                                    className="shaving" 
+                                    style={{
+                                        width: `${size}px`,
+                                        height: `${size * 1.2}px`,
+                                        left: `${left}%`,
+                                        top: `${top}%`,
+                                        opacity: opacity,
+                                        transform: `rotate(${rotate}deg)`
+                                    }}
+                                />
+                            );
+                        })}
+                    </div>
                 </div>
+                
                 <div className="sweet-row">
                     {[
                         "/assets/products/sample.png",
