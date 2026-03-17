@@ -57,40 +57,44 @@ export default function Home() {
                 );
             });
 
-            gsap.fromTo(
-                ".hero-title span",
-                { y: 28, opacity: 0, scale: 0.9, clipPath: "inset(0% 0% 100% 0%)" },
-                {
-                    y: 0,
-                    opacity: 1,
-                    scale: 1,
-                    clipPath: "inset(0% 0% 0% 0%)",
-                    duration: 0.95,
-                    ease: "back.out(1.8)",
-                    stagger: 0.08,
-                    delay: 0.1
+            gsap.utils.toArray(".hero-title span").forEach((letter) => {
+
+                function shake() {
+                    gsap.to(letter, {
+                        x: gsap.utils.random(-2, 2),      // small horizontal shake
+                        y: gsap.utils.random(-2, 2),      // small vertical shake
+                        rotate: gsap.utils.random(-2, 2), // slight rotation
+                        duration: gsap.utils.random(0.3, 0.6),
+                        ease: "sine.inOut",
+                        onComplete: shake                  // repeat endlessly
+                    });
                 }
-            );
 
-
-            gsap.utils.toArray("[data-float]").forEach((element) => {
-                const intensity = Number(element.dataset.float) || 0.3;
-                gsap.fromTo(
-                    element,
-                    { y: 30 },
-                    {
-                        y: -30,
-                        ease: "none",
-                        scrollTrigger: {
-                            trigger: element,
-                            start: "top bottom",
-                            end: "bottom top",
-                            scrub: intensity
-                        }
-                    }
-                );
+                shake(); // start the animation
             });
 
+            // RANDOM FLOAT FOR IMAGES & DOODLES
+            gsap.utils.toArray(".art-img, .art-title-group, .art-footer-detail, .squiggle, .sprinkle").forEach((el) => {
+
+                function randomMove() {
+                    let intensity = 1;
+                    if (el.classList.contains("img-spread")) intensity = 0.6;
+                    if (el.classList.contains("art-title-group")) intensity = 0.4;
+                    if (el.classList.contains("squiggle") || el.classList.contains("sprinkle")) intensity = 1.4;
+
+                    gsap.to(el, {
+                        x: gsap.utils.random(-8, 8) * intensity,
+                        y: gsap.utils.random(-8, 8) * intensity,
+                        rotate: gsap.utils.random(-2, 2),
+                        duration: gsap.utils.random(2.5, 4),
+                        ease: "sine.inOut",
+                        onComplete: randomMove
+                    });
+                }
+
+                gsap.delayedCall(gsap.utils.random(0, 2), randomMove);
+            });
+            
             gsap.utils.toArray(".exotic-badge").forEach((badge, index) => {
                 gsap.fromTo(
                     badge,
@@ -172,7 +176,7 @@ export default function Home() {
             // Speedy Caramel Droplets Motion
             gsap.utils.toArray(".shaving").forEach((shaving, i) => {
                 const speed = 1.2 + (i % 3); // Varied fast speeds
-                gsap.fromTo(shaving, 
+                gsap.fromTo(shaving,
                     { y: 180 }, // Start lower
                     {
                         y: -300, // Move high up
@@ -227,14 +231,28 @@ export default function Home() {
 
             <section className="marco-hero reveal-on-scroll">
                 <div className="hero-card">
-                    <div className="hero-bg-glass left" aria-hidden="true">
-                        <img src="/assets/products/sample-icecream.png" alt="" />
-                    </div>
-                    <div className="hero-bg-glass right" aria-hidden="true">
-                        <img src="/assets/products/RAJBHOG.jpeg" alt="" />
-                    </div>
+
                     <div className="hero-rays" aria-hidden="true" />
-                    <div className="hero-wave" aria-hidden="true" />
+
+                    {/* HERO WAVE */}
+                    <svg
+                        className="hero-wave"
+                        viewBox="0 0 1200 140"
+                        preserveAspectRatio="none"
+                    >
+                        <path
+                            d="M0,60 
+       C200,90 350,30 550,55 
+       C750,80 900,40 1200,60
+       L1200,140 
+       L0,140 
+       Z"
+                            fill="#E2B347"
+                            stroke="#2a1810"
+                            strokeWidth="1"
+                        />
+                    </svg>
+
                     <div className="hero-sprinkles" aria-hidden="true">
                         <span />
                         <span />
@@ -243,40 +261,47 @@ export default function Home() {
                         <span />
                         <span />
                     </div>
+
                     <div className="hero-copy">
                         <span className="hero-kicker">Since 2004</span>
-                        <h1 className="hero-title">
-                            <span>Making</span>
-                            <span>Your</span>
-                            <span>Sweet</span>
-                            <span>Dreams</span>
-                            <span>Come</span>
-                            <span>True.</span>
+
+                        <h1 className="hero-title random-bounce">
+                            {"MAKING YOUR SWEET DREAMS COME TRUE.".split("").map((letter, i) => (
+                                <span key={i} className="bounce-letter">
+                                    {letter === " " ? "\u00A0" : letter}
+                                </span>
+                            ))}
                         </h1>
+
                         <p>
                             Dive into a frozen paradise and let our ice cream
                             take you to a land of pure ecstasy.
                         </p>
+
                         <div className="hero-actions">
-                            <a href="#/products" className="hero-btn primary magnetic-btn">
-                                <span className="btn-text">Scoop It Up</span>
-                                <span className="btn-icon" aria-hidden="true">→</span>
-                            </a>
-                            <a href="#/products" className="hero-btn ghost">
-                                View Flavors
-                            </a>
+
+                            <button className="hero-btn primary">
+                                SCOOP IT UP →
+                            </button>
+
+                            <button className="hero-btn ghost">
+                                VIEW FLAVORS
+                            </button>
                         </div>
                     </div>
+
                     <div className="hero-visual">
-                        <div className="hero-frame" data-float="0.2">
+                        <div className="hero-frame">
                             <img
                                 className="hero-stack hero-stack-float"
-                                src="/assets/products/stack.png"
-                                alt="Mishti ice cream stack"
+                                src="/assets/products/stack1.png"
+                                alt="Ice cream stack"
                             />
                         </div>
-                        <div className="hero-floor-shadow" aria-hidden="true" />
+
+                        <div className="hero-floor-shadow" />
                     </div>
+
                 </div>
             </section>
 
@@ -308,9 +333,11 @@ export default function Home() {
             </section>
 
             <section className="flavor-strip reveal-on-scroll">
+
                 <div className="strip-item strip-title">
                     <h3>Types of Raw Flavor</h3>
                 </div>
+
                 <div className="strip-item strip-highlight">
                     <p>
                         We improve flavor consistency, boost and balance taste
@@ -318,23 +345,26 @@ export default function Home() {
                         mouthfeel!
                     </p>
                 </div>
+
                 <div className="strip-item strip-reviews">
+
                     <div className="review-avatars" aria-hidden="true">
                         <img src="/assets/images/avatar-1.png" alt="" />
                         <img src="/assets/images/avatar-2.png" alt="" />
                         <img src="/assets/images/avatar-3.png" alt="" />
                     </div>
+
                     <div className="review-copy">
                         <span className="reviews-number">1800+</span>
-                        <span>Customer Reviews</span>
+                        <span className="reviews-text">Customer Reviews</span>
                     </div>
+
                 </div>
+
                 <div className="strip-strawberries" aria-hidden="true">
-                    <img
-                        src="/assets/images/strawberries.png"
-                        alt=""
-                    />
+                    <img src="/assets/strawberry.png" alt="" />
                 </div>
+
             </section>
 
             <section className="feature-art-section reveal-on-scroll">
@@ -353,12 +383,17 @@ export default function Home() {
                     {/* Central Title Group */}
                     <div className="art-title-group">
                         <div className="title-row-upper">
-                            <h1>MOROCCAN</h1>
+                            <h1 className="hero-title">
+                                {"MISHTI".split("").map((char, i) => <span key={i}>{char}</span>)}
+                            </h1>
                             <img src="/assets/images/cone-doodle.png" alt="" className="cone-doodle" />
                         </div>
                         <div className="title-row-lower">
                             <img src="/assets/images/pink-heart.png" alt="" className="pink-heart-doodle" />
-                            <h1>HONEY NUT</h1>
+                            <h1 className="hero-title">
+                                {"HONEY NUT".split("").map((char, i) => <span key={i}>{char === " " ? "\u00A0" : char}</span>)}
+                            </h1>
+                            
                         </div>
                     </div>
 
@@ -374,9 +409,11 @@ export default function Home() {
                     {/* Decorative Doodles */}
                     <div className="art-doodles">
                         <div className="squiggle sq-1"></div>
+                        <div className="squiggle sq-2"></div>
                         <div className="sprinkle sp-1"></div>
                         <div className="sprinkle sp-2"></div>
                         <div className="sprinkle sp-3"></div>
+                        <div className="sprinkle sp-4"></div>
                     </div>
                 </div>
             </section>
@@ -425,7 +462,7 @@ export default function Home() {
                                 </text>
                             </svg>
                             <div className="stamp-center">
-                                <span className="no-1">NO<br/>.1</span>
+                                <span className="no-1">NO<br />.1</span>
                             </div>
                             <div className="stamp-sparkles">
                                 <span className="sparkle s1">✦</span>
@@ -451,9 +488,9 @@ export default function Home() {
                                 <div key={i} className="sunburst-beam" style={{ transform: `rotate(${i * 30}deg)` }} />
                             ))}
                         </div>
-                        <img 
-                            src="/assets/images/happy-man-icecream.png" 
-                            alt="Happy person with ice cream" 
+                        <img
+                            src="/assets/images/happy-man-icecream.png"
+                            alt="Happy person with ice cream"
                             className="memories-hero-img"
                         />
                     </div>
@@ -470,8 +507,8 @@ export default function Home() {
                         EVOKE MEMORIES.
                     </h2>
                     <p className="memories-description">
-                        You will have a great time with to our delicious desserts. 
-                        Delight in exquisite ice-cream, from elegant desserts, 
+                        You will have a great time with to our delicious desserts.
+                        Delight in exquisite ice-cream, from elegant desserts,
                         which reflect quality.
                     </p>
                     <div className="memories-actions">
@@ -502,11 +539,11 @@ export default function Home() {
                             const top = Math.floor(Math.random() * 130) - 15; // -15% to 115%
                             const opacity = Math.random() * 0.4 + 0.6; // 0.6 to 1.0
                             const rotate = Math.floor(Math.random() * 360);
-                            
+
                             return (
-                                <div 
-                                    key={i} 
-                                    className="shaving" 
+                                <div
+                                    key={i}
+                                    className="shaving"
                                     style={{
                                         width: `${size}px`,
                                         height: `${size * 1.2}px`,
@@ -520,7 +557,7 @@ export default function Home() {
                         })}
                     </div>
                 </div>
-                
+
                 <div className="sweet-row">
                     {[
                         "/assets/products/sample.png",
@@ -540,3 +577,4 @@ export default function Home() {
     );
 
 }
+
