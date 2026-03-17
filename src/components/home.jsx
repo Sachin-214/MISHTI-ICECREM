@@ -413,6 +413,7 @@ export default function Home() {
                         <div className="sprinkle sp-1"></div>
                         <div className="sprinkle sp-2"></div>
                         <div className="sprinkle sp-3"></div>
+                        <div className="sprinkle sp-4"></div>
                     </div>
                 </div>
             </section>
