@@ -1,0 +1,166 @@
+.flavor-showcase-container {
+    width: 300%; /* Since there are 3 panels */
+    height: 100vh;
+    display: flex;
+    flex-wrap: nowrap;
+    overflow: hidden;
+    position: relative;
+    /* This component is pinned by GSAP so it scrubs horizontally */
+}
+
+/* Individual full-viewport panels */
+.flavor-panel {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+/* Specific Flavor Gradients */
+.mango-bg { background: linear-gradient(135deg, #f4b41a 0%, #db8600 100%); }
+.strawberry-bg { background: linear-gradient(135deg, #ff6b87 0%, #d92445 100%); }
+.chocolate-bg { background: linear-gradient(135deg, #593330 0%, #291514 100%); }
+
+.flavor-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 80%;
+    max-width: 1300px;
+    z-index: 10;
+}
+
+/* Alternate layout direction for mid panels */
+.flex-reverse {
+    flex-direction: row-reverse;
+}
+
+/* Text & Typography */
+.flavor-text {
+    flex: 1;
+    color: white;
+    padding: 0 40px;
+}
+
+.flavor-text h2 {
+    font-size: 5.5rem;
+    font-weight: 800;
+    margin-bottom: 25px;
+    line-height: 1.1;
+    letter-spacing: 2px;
+    text-shadow: 2px 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.flavor-text p {
+    font-size: 1.6rem;
+    margin-bottom: 45px;
+    line-height: 1.6;
+    font-weight: 500;
+    opacity: 0.95;
+    text-shadow: 1px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Interaction Button */
+.flavor-btn {
+    background: white;
+    color: #222;
+    border: none;
+    padding: 18px 45px;
+    font-size: 1.25rem;
+    font-weight: 700;
+    border-radius: 50px;
+    cursor: pointer;
+    box-shadow: 0px 10px 20px rgba(0,0,0,0.2);
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s;
+}
+
+.flavor-btn:hover {
+    transform: translateY(-8px) scale(1.05);
+    box-shadow: 0px 15px 30px rgba(0,0,0,0.3);
+}
+
+/* Visuals Container */
+.flavor-visuals {
+    flex: 1;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transform: translateZ(0); /* Hardware acceleration */
+}
+
+/* Main Icecream Visual */
+.floating-flavor {
+    width: 480px;
+    max-width: 100%;
+    z-index: 5;
+    filter: drop-shadow(0px 25px 35px rgba(0,0,0,0.5));
+    mix-blend-mode: multiply; /* Removes white boxes if JPEGs are passed */
+}
+
+/* Multiply effect sometimes hides dark images on dark backgrounds, handle chocolate specifically */
+.chocolate-bg .floating-flavor {
+    mix-blend-mode: normal;
+}
+
+/* Floating Ingredients */
+.flavor-ingredient {
+    position: absolute;
+    width: 150px;
+    z-index: 2;
+    filter: blur(2px) drop-shadow(0px 15px 25px rgba(0,0,0,0.3));
+    mix-blend-mode: multiply;
+}
+
+.ing-1 { top: -15%; right: 0%; transform: rotate(15deg); }
+.ing-2 { bottom: -10%; left: -10%; transform: rotate(-25deg); }
+.ing-3 { top: 5%; right: 10%; mix-blend-mode: normal; filter: blur(3px) drop-shadow(0px 15px 20px rgba(0,0,0,0.6)); }
+
+/* Responsive break points */
+@media (max-width: 1024px) {
+    .flavor-text h2 {
+        font-size: 4rem;
+    }
+    .floating-flavor {
+        width: 380px;
+    }
+}
+
+@media (max-width: 768px) {
+    .flavor-content {
+        flex-direction: column;
+        text-align: center;
+        padding-top: 20px;
+    }
+    
+    .flex-reverse {
+        flex-direction: column;
+    }
+    
+    .flavor-text {
+        padding: 0 15px;
+        margin-bottom: 30px;
+    }
+    
+    .flavor-text h2 {
+        font-size: 3.2rem;
+        margin-bottom: 15px;
+    }
+    
+    .flavor-text p {
+        font-size: 1.2rem;
+        margin-bottom: 30px;
+    }
+    
+    .floating-flavor {
+        width: 300px;
+    }
+    
+    .flavor-ingredient {
+        width: 100px;
+    }
+}
