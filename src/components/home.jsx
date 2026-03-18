@@ -1,13 +1,14 @@
 import React, { useEffect, useRef } from "react";
 import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { ScrollTrigger, Draggable } from "gsap/all";
 import "../styles/home.css";
 import Footer from "./Footer";
 
-gsap.registerPlugin(ScrollTrigger);
+gsap.registerPlugin(ScrollTrigger, Draggable);
 
 export default function Home() {
     const rowRef = useRef(null);
+    const popularRef = useRef(null);
 
     const handleScroll = (direction) => {
         const verticalShift = 500; // Amount of vertical scroll to move cards horizontally
@@ -37,6 +38,7 @@ export default function Home() {
                 );
             });
 
+            // Pop-up animation on scroll for cards
             gsap.utils.toArray(".pop-on-scroll").forEach((element, index) => {
                 gsap.fromTo(
                     element,
@@ -56,6 +58,77 @@ export default function Home() {
                     }
                 );
             });
+
+            // Hover pop effect for popular cards
+            gsap.utils.toArray(".popular-card").forEach((card) => {
+                const img = card.querySelector("img");
+                card.addEventListener("mouseenter", () => {
+                    gsap.to(img, { scale: 1.1, duration: 0.3, ease: "power3.out" });
+                });
+                card.addEventListener("mouseleave", () => {
+                    gsap.to(img, { scale: 1, duration: 0.3, ease: "power3.out" });
+                });
+            });
+
+            // Infinite horizontal scroll for popular section
+            const track = popularRef.current;
+            if (track) {
+                const originalCards = Array.from(track.children);
+
+                // duplicate enough times for seamless loop (3x total)
+                for (let i = 0; i < 2; i++) {
+                    originalCards.forEach(card => track.appendChild(card.cloneNode(true)));
+                }
+
+                const allCards = Array.from(track.children);
+
+                // calculate total width of original set
+                let loopWidth = 0;
+                originalCards.forEach(card => {
+                    loopWidth += card.offsetWidth + 20; // include gap
+                });
+
+                // GSAP loop animation: right → left
+                gsap.to(track, {
+                    x: `-=${loopWidth}`,
+                    duration: 80,
+                    ease: "none",
+                    repeat: -1,
+                    modifiers: {
+                        x: (x) => {
+                            let val = parseFloat(x);
+                            if (val <= -loopWidth) val += loopWidth;
+                            return `${val}px`;
+                        }
+                    }
+                });
+
+                // Draggable setup
+                Draggable.create(track, {
+                    type: "x",
+                    onPress() {
+                        gsap.killTweensOf(track);
+                    },
+                    onDrag() {
+                        gsap.set(track, { x: this.x });
+                    },
+                    onRelease() {
+                        gsap.to(track, {
+                            x: `-=${loopWidth}`,
+                            duration: 50,
+                            ease: "none",
+                            repeat: -1,
+                            modifiers: {
+                                x: (x) => {
+                                    let val = parseFloat(x);
+                                    if (val <= -loopWidth) val += loopWidth;
+                                    return `${val}px`;
+                                }
+                            }
+                        });
+                    }
+                });
+            }
 
             gsap.utils.toArray(".hero-title span").forEach((letter) => {
 
@@ -94,7 +167,7 @@ export default function Home() {
 
                 gsap.delayedCall(gsap.utils.random(0, 2), randomMove);
             });
-            
+
             gsap.utils.toArray(".exotic-badge").forEach((badge, index) => {
                 gsap.fromTo(
                     badge,
@@ -190,6 +263,9 @@ export default function Home() {
                     }
                 );
             });
+
+
+
         });
 
         return () => ctx.revert();
@@ -312,23 +388,27 @@ export default function Home() {
                         <h2>Popular Scoop Flavors</h2>
                         <span className="title-dash">-</span>
                     </div>
+
                     <a href="#/products" className="hero-btn ghost">View Flavors</a>
                 </div>
-                <div className="popular-grid">
-                    {[
-                        { name: "Dulce de Cookies", image: "/assets/products/sample-icecream.png" },
-                        { name: "Turkish Mocha", image: "/assets/products/twix.jpg.jpeg" },
-                        { name: "Spicy PB Caramel", image: "/assets/RAJABAR.png" },
-                        { name: "Thai Coco-Lime", image: "/assets/TWIXCHOCOBAR.png" },
-                        { name: "Moroccan Honey", image: "/assets/products/RAJBHOG.jpeg" }
-                    ].map((flavor) => (
-                        <article className="popular-card pop-on-scroll" key={flavor.name}>
-                            <div className="popular-image">
-                                <img src={flavor.image} alt={flavor.name} />
-                            </div>
-                            <h3>{flavor.name}</h3>
-                        </article>
-                    ))}
+
+                <div className="popular-wrapper">
+                    <div className="popular-track" ref={popularRef}>
+                        {[
+                            { name: "Dulce de Cookies", image: "/assets/products/sample-icecream.png" },
+                            { name: "Turkish Mocha", image: "/assets/products/twix.jpg.jpeg" },
+                            { name: "Spicy PB Caramel", image: "/assets/RAJABAR.png" },
+                            { name: "Thai Coco-Lime", image: "/assets/TWIXCHOCOBAR.png" },
+                            { name: "Moroccan Honey", image: "/assets/products/RAJBHOG.jpeg" }
+                        ].map((flavor, index) => (
+                            <article className="popular-card pop-on-scroll" key={index}>
+                                <div className="popular-image">
+                                    <img src={flavor.image} alt={flavor.name} />
+                                </div>
+                                <h3>{flavor.name}</h3>
+                            </article>
+                        ))}
+                    </div>
                 </div>
             </section>
 
@@ -393,7 +473,7 @@ export default function Home() {
                             <h1 className="hero-title">
                                 {"HONEY NUT".split("").map((char, i) => <span key={i}>{char === " " ? "\u00A0" : char}</span>)}
                             </h1>
-                            
+
                         </div>
                     </div>
 
@@ -474,47 +554,66 @@ export default function Home() {
             </section>
 
             <section className="memories-section reveal-on-scroll">
-                {/* Decorative Sprinkles - Scattered across the section */}
+
+                {/* Sprinkles */}
                 <div className="memories-sprinkles">
                     {[...Array(12)].map((_, i) => (
                         <span key={i} className={`memories-sprinkle s${i + 1}`}></span>
                     ))}
                 </div>
 
+                {/* LEFT VISUAL */}
                 <div className="memories-visual-container">
                     <div className="memories-visual-frame">
-                        <div className="memories-sunburst">
-                            {[...Array(12)].map((_, i) => (
-                                <div key={i} className="sunburst-beam" style={{ transform: `rotate(${i * 30}deg)` }} />
-                            ))}
-                        </div>
+
+                        {/* 🔥 NEW SUNBURST */}
+                        <div className="memories-sunburst"></div>
+
                         <img
                             src="/assets/images/happy-man-icecream.png"
                             alt="Happy person with ice cream"
                             className="memories-hero-img"
                         />
                     </div>
-                    <img src="/assets/images/pink-heart-3d.png" alt="Love icon" className="floating-heart" />
+
+                    <img
+                        src="/assets/images/pink-heart-3d.png"
+                        alt="Love icon"
+                        className="floating-heart"
+                    />
                 </div>
 
+                {/* RIGHT CONTENT */}
                 <div className="memories-copy">
-                    <div className="truffle-badge">
-                        <img src="/assets/images/chocolate-truffle.png" alt="Chocolate scoop" />
+
+                    <div className="heading-with-icon">
+                        <h2 className="memories-heading">
+                            WE
+                            <span className="offer-wrap">
+                                OFFER
+                                <img
+                                    src="/assets/images/chocolate-truffle.png"
+                                    className="offer-choco"
+                                    alt=""
+                                />
+                            </span>
+                            <br />
+                            ICECREAM THAT <br />
+                            EVOKE MEMORIES.
+                        </h2>
                     </div>
-                    <h2 className="memories-heading">
-                        WE OFFER <br />
-                        ICECREAM THAT <br />
-                        EVOKE MEMORIES.
-                    </h2>
+
                     <p className="memories-description">
-                        You will have a great time with to our delicious desserts.
+                        You will have a great time with our delicious desserts.
                         Delight in exquisite ice-cream, from elegant desserts,
                         which reflect quality.
                     </p>
+
                     <div className="memories-actions">
                         <a href="#/products" className="memories-btn-primary">
                             VIEW FLAVORS <span>&gt;</span>
                         </a>
+
                         <a href="#/contact" className="memories-btn-ghost">
                             <div className="map-marker-container">
                                 <div className="map-folded"></div>
@@ -527,6 +626,7 @@ export default function Home() {
                     </div>
                 </div>
             </section>
+
 
             <section className="sweet-section reveal-on-scroll">
                 <div className="sweet-heading-wrapper">
