@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger, Draggable } from "gsap/all";
 import "../styles/home.css";
@@ -9,9 +9,10 @@ gsap.registerPlugin(ScrollTrigger, Draggable);
 export default function Home() {
     const rowRef = useRef(null);
     const popularRef = useRef(null);
+    const [sidebarOpen, setSidebarOpen] = useState(false);
 
     const handleScroll = (direction) => {
-        const verticalShift = 500; // Amount of vertical scroll to move cards horizontally
+        const verticalShift = 500;
         window.scrollBy({
             top: direction === "next" ? verticalShift : -verticalShift,
             behavior: "smooth"
@@ -19,7 +20,11 @@ export default function Home() {
     };
 
     useEffect(() => {
+        const isMobile = window.innerWidth <= 768;
+
         const ctx = gsap.context(() => {
+
+            // Reveal on scroll
             gsap.utils.toArray(".reveal-on-scroll").forEach((element) => {
                 gsap.fromTo(
                     element,
@@ -75,20 +80,15 @@ export default function Home() {
             if (track) {
                 const originalCards = Array.from(track.children);
 
-                // duplicate enough times for seamless loop (3x total)
                 for (let i = 0; i < 2; i++) {
                     originalCards.forEach(card => track.appendChild(card.cloneNode(true)));
                 }
 
-                const allCards = Array.from(track.children);
-
-                // calculate total width of original set
                 let loopWidth = 0;
                 originalCards.forEach(card => {
-                    loopWidth += card.offsetWidth + 20; // include gap
+                    loopWidth += card.offsetWidth + 20;
                 });
 
-                // GSAP loop animation: right → left
                 gsap.to(track, {
                     x: `-=${loopWidth}`,
                     duration: 80,
@@ -103,7 +103,6 @@ export default function Home() {
                     }
                 });
 
-                // Draggable setup
                 Draggable.create(track, {
                     type: "x",
                     onPress() {
@@ -130,44 +129,44 @@ export default function Home() {
                 });
             }
 
+            // Hero title shake
             gsap.utils.toArray(".hero-title span").forEach((letter) => {
-
                 function shake() {
                     gsap.to(letter, {
-                        x: gsap.utils.random(-2, 2),      // small horizontal shake
-                        y: gsap.utils.random(-2, 2),      // small vertical shake
-                        rotate: gsap.utils.random(-2, 2), // slight rotation
+                        x: gsap.utils.random(-2, 2),
+                        y: gsap.utils.random(-2, 2),
+                        rotate: gsap.utils.random(-2, 2),
                         duration: gsap.utils.random(0.3, 0.6),
                         ease: "sine.inOut",
-                        onComplete: shake                  // repeat endlessly
+                        onComplete: shake
                     });
                 }
-
-                shake(); // start the animation
+                shake();
             });
 
-            // RANDOM FLOAT FOR IMAGES & DOODLES
-            gsap.utils.toArray(".art-img, .art-title-group, .art-footer-detail, .squiggle, .sprinkle").forEach((el) => {
+            // Random float for art collage — DESKTOP ONLY
+            if (!isMobile) {
+                gsap.utils.toArray(".art-img, .art-title-group, .art-footer-detail, .squiggle, .sprinkle").forEach((el) => {
+                    function randomMove() {
+                        let intensity = 1;
+                        if (el.classList.contains("img-spread")) intensity = 0.6;
+                        if (el.classList.contains("art-title-group")) intensity = 0.4;
+                        if (el.classList.contains("squiggle") || el.classList.contains("sprinkle")) intensity = 1.4;
 
-                function randomMove() {
-                    let intensity = 1;
-                    if (el.classList.contains("img-spread")) intensity = 0.6;
-                    if (el.classList.contains("art-title-group")) intensity = 0.4;
-                    if (el.classList.contains("squiggle") || el.classList.contains("sprinkle")) intensity = 1.4;
+                        gsap.to(el, {
+                            x: gsap.utils.random(-8, 8) * intensity,
+                            y: gsap.utils.random(-8, 8) * intensity,
+                            rotate: gsap.utils.random(-2, 2),
+                            duration: gsap.utils.random(2.5, 4),
+                            ease: "sine.inOut",
+                            onComplete: randomMove
+                        });
+                    }
+                    gsap.delayedCall(gsap.utils.random(0, 2), randomMove);
+                });
+            }
 
-                    gsap.to(el, {
-                        x: gsap.utils.random(-8, 8) * intensity,
-                        y: gsap.utils.random(-8, 8) * intensity,
-                        rotate: gsap.utils.random(-2, 2),
-                        duration: gsap.utils.random(2.5, 4),
-                        ease: "sine.inOut",
-                        onComplete: randomMove
-                    });
-                }
-
-                gsap.delayedCall(gsap.utils.random(0, 2), randomMove);
-            });
-
+            // Exotic badge reveal
             gsap.utils.toArray(".exotic-badge").forEach((badge, index) => {
                 gsap.fromTo(
                     badge,
@@ -205,6 +204,7 @@ export default function Home() {
                 }
             );
 
+            // Sweet title letter wave
             gsap.utils.toArray(".letter").forEach((letter, index) => {
                 gsap.to(letter, {
                     y: index % 2 === 0 ? -12 : 12,
@@ -216,9 +216,8 @@ export default function Home() {
                 });
             });
 
+            // Sweet row images
             gsap.utils.toArray(".sweet-row img").forEach((img, index) => {
-
-                // Reveal
                 gsap.fromTo(
                     img,
                     { y: 40, opacity: 0 },
@@ -236,7 +235,6 @@ export default function Home() {
                     }
                 );
 
-                // Continuous bounce
                 gsap.to(img, {
                     y: index % 2 === 0 ? -20 : 20,
                     rotate: index % 2 === 0 ? -2 : 2,
@@ -248,12 +246,12 @@ export default function Home() {
                 });
             });
 
-            // Horizontal pinning effect for Exotic Flavors
+            // Horizontal pinning — DESKTOP ONLY
             const exoticRow = rowRef.current;
-            if (exoticRow) {
+            if (exoticRow && !isMobile) {
                 const totalCardsWidth = exoticRow.scrollWidth;
                 const windowWidth = window.innerWidth;
-                const skipAmount = totalCardsWidth - windowWidth + 200; // Extra buffer to unveil all
+                const skipAmount = totalCardsWidth - windowWidth + 200;
 
                 gsap.to(exoticRow, {
                     x: -skipAmount,
@@ -262,7 +260,7 @@ export default function Home() {
                         trigger: ".exotic-section",
                         pin: true,
                         start: "top top",
-                        end: () => `+=${skipAmount + 400}`, // Duration of the pin
+                        end: () => `+=${skipAmount + 400}`,
                         scrub: 1.2,
                         invalidateOnRefresh: true,
                         anticipatePin: 1
@@ -270,14 +268,13 @@ export default function Home() {
                 });
             }
 
-            // Speedy Caramel Droplets Motion
+            // Shaving parallax
             gsap.utils.toArray(".shaving").forEach((shaving, i) => {
                 const speed = 1.2 + (i % 3);
-
                 gsap.fromTo(shaving,
                     { y: 0 },
                     {
-                        y: 120, // moves downward into images
+                        y: 120,
                         ease: "none",
                         scrollTrigger: {
                             trigger: ".sweet-section",
@@ -289,83 +286,84 @@ export default function Home() {
                 );
             });
 
-
-
         });
 
         return () => ctx.revert();
     }, []);
 
     return (
-
         <div className="home">
 
-            {/* HEADER WITH LOGO */}
-            <header className="main-header">
+            {/* ── DESKTOP HEADER (unchanged) ── */}
+            <header className="main-header desktop-header">
                 <div className="header-center">
-                    <a className="header-link" href="#/about">
-                        About Us
-                    </a>
+                    <a className="header-link" href="#/about">About Us</a>
                     <a href="#/home" aria-label="Mishti Icecream Home">
-                        <img
-                            src="/assets/images/logo.png"
-                            alt="Mishti Icecream Logo"
-                            className="logo"
-                        />
+                        <img src="/assets/images/logo.png" alt="Mishti Icecream Logo" className="logo" />
                     </a>
-                    <a className="header-link" href="#/products">
-                        Products
-                    </a>
-                    <a className="header-link" href="#/contact">
-                        Contact Us
-                    </a>
+                    <a className="header-link" href="#/products">Products</a>
+                    <a className="header-link" href="#/contact">Contact Us</a>
                 </div>
             </header>
+
+            {/* ── MOBILE HEADER ── */}
+            <header className="mobile-header">
+                <a href="#/home" className="mobile-logo-link" aria-label="Mishti Icecream Home">
+                    <img src="/assets/images/logo.png" alt="Mishti Icecream Logo" className="mobile-logo" />
+                </a>
+                <button
+                    className={`hamburger ${sidebarOpen ? "open" : ""}`}
+                    onClick={() => setSidebarOpen(true)}
+                    aria-label="Open menu"
+                >
+                    <span /><span /><span />
+                </button>
+            </header>
+
+            {/* ── SIDEBAR DRAWER ── */}
+            <div className={`sidebar-overlay ${sidebarOpen ? "visible" : ""}`} onClick={() => setSidebarOpen(false)} />
+            <nav className={`sidebar-drawer ${sidebarOpen ? "open" : ""}`}>
+                <button className="sidebar-close" onClick={() => setSidebarOpen(false)} aria-label="Close menu">✕</button>
+                <div className="sidebar-logo-wrap">
+                    <img src="/assets/images/logo.png" alt="Mishti Icecream" className="sidebar-logo" />
+                </div>
+                <div className="sidebar-links">
+                    <a className="sidebar-link" href="#/about"    onClick={() => setSidebarOpen(false)}>About Us</a>
+                    <a className="sidebar-link" href="#/products" onClick={() => setSidebarOpen(false)}>Products</a>
+                    <a className="sidebar-link" href="#/contact"  onClick={() => setSidebarOpen(false)}>Contact Us</a>
+                </div>
+                <div className="sidebar-footer">
+                    <span>🍦 Mishti Ice Cream</span>
+                    <span>Since 2004</span>
+                </div>
+            </nav>
 
             <div className="promo-strip">
                 <span>Free Shipping on Orders Over ₹500!</span>
                 <span className="promo-dot" />
-                <span>Cold, Creamy & Fresh Daily</span>
+                <span>Cold, Creamy &amp; Fresh Daily</span>
                 <span className="promo-dot" />
                 <span>Mishti Ice Cream Specials</span>
             </div>
 
+            {/* HERO */}
             <section className="marco-hero reveal-on-scroll">
                 <div className="hero-card">
-
                     <div className="hero-rays" aria-hidden="true" />
-
-                    {/* HERO WAVE */}
-                    <svg
-                        className="hero-wave"
-                        viewBox="0 0 1200 140"
-                        preserveAspectRatio="none"
-                    >
+                    <svg className="hero-wave" viewBox="0 0 1200 140" preserveAspectRatio="none">
                         <path
-                            d="M0,60 
-       C200,90 350,30 550,55 
-       C750,80 900,40 1200,60
-       L1200,140 
-       L0,140 
-       Z"
+                            d="M0,60 C200,90 350,30 550,55 C750,80 900,40 1200,60 L1200,140 L0,140 Z"
                             fill="#E2B347"
                             stroke="#2a1810"
                             strokeWidth="1"
                         />
                     </svg>
-
                     <div className="hero-sprinkles" aria-hidden="true">
-                        <span />
-                        <span />
-                        <span />
-                        <span />
-                        <span />
-                        <span />
+                        <span /><span /><span /><span /><span /><span />
                     </div>
 
                     <div className="hero-copy">
                         <span className="hero-kicker">Since 2004</span>
-
                         <h1 className="hero-title random-bounce">
                             {"MAKING YOUR SWEET DREAMS COME TRUE.".split("").map((letter, i) => (
                                 <span key={i} className="bounce-letter">
@@ -373,39 +371,23 @@ export default function Home() {
                                 </span>
                             ))}
                         </h1>
-
-                        <p>
-                            Dive into a frozen paradise and let our ice cream
-                            take you to a land of pure ecstasy.
-                        </p>
-
+                        <p>Dive into a frozen paradise and let our ice cream take you to a land of pure ecstasy.</p>
                         <div className="hero-actions">
-
-                            <button className="hero-btn primary">
-                                SCOOP IT UP →
-                            </button>
-
-                            <button className="hero-btn ghost">
-                                VIEW FLAVORS
-                            </button>
+                            <button className="hero-btn primary">SCOOP IT UP →</button>
+                            <button className="hero-btn ghost">VIEW FLAVORS</button>
                         </div>
                     </div>
 
                     <div className="hero-visual">
                         <div className="hero-frame">
-                            <img
-                                className="hero-stack hero-stack-float"
-                                src="/assets/products/stack1.png"
-                                alt="Ice cream stack"
-                            />
+                            <img className="hero-stack hero-stack-float" src="/assets/products/stack1.png" alt="Ice cream stack" />
                         </div>
-
                         <div className="hero-floor-shadow" />
                     </div>
-
                 </div>
             </section>
 
+            {/* POPULAR */}
             <section className="popular-section reveal-on-scroll">
                 <div className="section-head popular-scoop-head">
                     <div className="popular-title-wrapper">
@@ -413,10 +395,8 @@ export default function Home() {
                         <h2>Popular Scoop Flavors</h2>
                         <span className="title-dash">-</span>
                     </div>
-
                     <a href="#/products" className="hero-btn ghost">View Flavors</a>
                 </div>
-
                 <div className="popular-wrapper">
                     <div className="popular-track" ref={popularRef}>
                         {[
@@ -427,71 +407,54 @@ export default function Home() {
                             { name: "Moroccan Honey", image: "/assets/products/RAJBHOG.jpeg" }
                         ].map((flavor, index) => (
                             <div className="popular-item" key={index}>
-
                                 <article className="popular-card pop-on-scroll">
                                     <div className="popular-image">
                                         <img src={flavor.image} alt={flavor.name} />
                                     </div>
                                 </article>
-
-                                {/* TEXT OUTSIDE */}
                                 <h3 className="popular-name">{flavor.name}</h3>
-
                             </div>
                         ))}
                     </div>
                 </div>
             </section>
 
+            {/* FLAVOR STRIP */}
             <section className="flavor-strip reveal-on-scroll">
-
                 <div className="strip-item strip-title">
                     <h3>Types of Raw Flavor</h3>
                 </div>
-
                 <div className="strip-item strip-highlight">
-                    <p>
-                        We improve flavor consistency, boost and balance taste
-                        profiles, and increase the perception of creamy
-                        mouthfeel!
-                    </p>
+                    <p>We improve flavor consistency, boost and balance taste profiles, and increase the perception of creamy mouthfeel!</p>
                 </div>
-
                 <div className="strip-item strip-reviews">
-
                     <div className="review-avatars" aria-hidden="true">
                         <img src="/assets/images/avatar-1.png" alt="" />
                         <img src="/assets/images/avatar-2.png" alt="" />
                         <img src="/assets/images/avatar-3.png" alt="" />
                     </div>
-
                     <div className="review-copy">
                         <span className="reviews-number">1800+</span>
                         <span className="reviews-text">Customer Reviews</span>
                     </div>
-
                 </div>
-
                 <div className="strip-strawberries" aria-hidden="true">
                     <img src="/assets/strawberry.png" alt="" />
                 </div>
-
             </section>
 
+            {/* ART COLLAGE */}
             <section className="feature-art-section reveal-on-scroll">
                 <div className="art-collage-container">
-                    {/* Floating Images */}
                     <div className="art-img img-peanuts" data-float="0.4">
                         <img src="/assets/images/collage-1.png" alt="Honey Nut" />
                     </div>
                     <div className="art-img img-lime" data-float="0.6">
-                        <img src="/assets/images/collage-3.png" alt="Lime & Chili" />
+                        <img src="/assets/images/collage-3.png" alt="Lime &amp; Chili" />
                     </div>
                     <div className="art-img img-spread" data-float="0.2">
                         <img src="/assets/images/collage-2.png" alt="Ice Cream Spread" />
                     </div>
-
-                    {/* Central Title Group */}
                     <div className="art-title-group">
                         <div className="title-row-upper">
                             <h1 className="hero-title">
@@ -502,13 +465,12 @@ export default function Home() {
                         <div className="title-row-lower">
                             <img src="/assets/images/pink-heart.png" alt="" className="pink-heart-doodle" />
                             <h1 className="hero-title">
-                                {"HONEY NUT".split("").map((char, i) => <span key={i}>{char === " " ? "\u00A0" : char}</span>)}
+                                {"HONEY NUT".split("").map((char, i) => (
+                                    <span key={i}>{char === " " ? "\u00A0" : char}</span>
+                                ))}
                             </h1>
-
                         </div>
                     </div>
-
-                    {/* Bottom Left Detail */}
                     <div className="art-footer-detail">
                         <img src="/assets/images/pink-scoop.png" alt="" className="mini-scoop" />
                         <div className="detail-text">
@@ -516,8 +478,6 @@ export default function Home() {
                             <span className="essence-text">VANILLA ESSENCE</span>
                         </div>
                     </div>
-
-                    {/* Decorative Doodles */}
                     <div className="art-doodles">
                         <div className="squiggle sq-1"></div>
                         <div className="squiggle sq-2"></div>
@@ -529,16 +489,13 @@ export default function Home() {
                 </div>
             </section>
 
+            {/* EXOTIC FLAVORS */}
             <section className="exotic-section">
                 <div className="section-head">
                     <h2>Exoteric Flavors</h2>
                     <div className="exotic-nav">
-                        <button className="circle-btn" aria-label="Previous" onClick={() => handleScroll("prev")}>
-                            ←
-                        </button>
-                        <button className="circle-btn" aria-label="Next" onClick={() => handleScroll("next")}>
-                            →
-                        </button>
+                        <button className="circle-btn" aria-label="Previous" onClick={() => handleScroll("prev")}>←</button>
+                        <button className="circle-btn" aria-label="Next" onClick={() => handleScroll("next")}>→</button>
                     </div>
                 </div>
                 <div className="exotic-row" ref={rowRef}>
@@ -552,7 +509,7 @@ export default function Home() {
                         <div className={`exotic-badge-container pop-on-scroll ${item.tone}`} key={item.name}>
                             <span className="exotic-label">{item.name}</span>
                             <div className={`exotic-badge ${item.tone}`}>
-                                {item.tone === 'pink' ? (
+                                {item.tone === "pink" ? (
                                     <div className="exotic-rotator">
                                         <div className="exotic-shape" />
                                     </div>
@@ -584,73 +541,44 @@ export default function Home() {
                 </div>
             </section>
 
+            {/* MEMORIES */}
             <section className="memories-section reveal-on-scroll">
-
-                {/* Sprinkles */}
                 <div className="memories-sprinkles">
                     {[...Array(12)].map((_, i) => (
                         <span key={i} className={`memories-sprinkle s${i + 1}`}></span>
                     ))}
                 </div>
 
-                {/* LEFT VISUAL */}
                 <div className="memories-visual-container">
                     <div className="memories-visual-frame">
-
-                        {/* 🔥 NEW SUNBURST */}
                         <div className="memories-sunburst"></div>
-
-                        <img
-                            src="/assets/images/happy-man-icecream.png"
-                            alt="Happy person with ice cream"
-                            className="memories-hero-img"
-                        />
+                        <img src="/assets/images/happy-man-icecream.png" alt="Happy person with ice cream" className="memories-hero-img" />
                     </div>
-
-                    <img
-                        src="/assets/images/pink-heart-3d.png"
-                        alt="Love icon"
-                        className="floating-heart"
-                    />
+                    <img src="/assets/images/pink-heart-3d.png" alt="Love icon" className="floating-heart" />
                 </div>
 
-                {/* RIGHT CONTENT */}
                 <div className="memories-copy">
-
                     <div className="heading-with-icon">
                         <h2 className="memories-heading">
                             WE
                             <span className="offer-wrap">
                                 OFFER
-                                <img
-                                    src="/assets/images/chocolate-truffle.png"
-                                    className="offer-choco"
-                                    alt=""
-                                />
+                                <img src="/assets/images/chocolate-truffle.png" className="offer-choco" alt="" />
                             </span>
                             <br />
                             ICECREAM THAT <br />
                             EVOKE MEMORIES.
                         </h2>
                     </div>
-
                     <p className="memories-description">
-                        You will have a great time with our delicious desserts.
-                        Delight in exquisite ice-cream, from elegant desserts,
-                        which reflect quality.
+                        You will have a great time with our delicious desserts. Delight in exquisite ice-cream, from elegant desserts, which reflect quality.
                     </p>
-
                     <div className="memories-actions">
-                        <a href="#/products" className="memories-btn-primary">
-                            VIEW FLAVORS <span>&gt;</span>
-                        </a>
-
+                        <a href="#/products" className="memories-btn-primary">VIEW FLAVORS <span>&gt;</span></a>
                         <a href="#/contact" className="memories-btn-ghost">
                             <div className="map-marker-container">
                                 <div className="map-folded"></div>
-                                <div className="map-pin">
-                                    <span className="pin-head"></span>
-                                </div>
+                                <div className="map-pin"><span className="pin-head"></span></div>
                             </div>
                             FIND SHOPS
                         </a>
@@ -658,18 +586,14 @@ export default function Home() {
                 </div>
             </section>
 
-
+            {/* SWEET */}
             <section className="sweet-section reveal-on-scroll">
                 <div className="sweet-heading-wrapper">
-
                     <h2 className="sweet-title">
                         {"SWEET COLD CREAMY".split("").map((char, i) => (
-                            <span key={i} className="letter">
-                                {char === " " ? "\u00A0" : char}
-                            </span>
+                            <span key={i} className="letter">{char === " " ? "\u00A0" : char}</span>
                         ))}
                     </h2>
-
                     <div className="shaving-splatter">
                         {[...Array(60)].map((_, i) => {
                             const size = Math.floor(Math.random() * 8) + 4;
@@ -677,43 +601,37 @@ export default function Home() {
                             const top = Math.floor(Math.random() * 130) - 15;
                             const opacity = Math.random() * 0.4 + 0.6;
                             const rotate = Math.floor(Math.random() * 360);
-
+                            const delay = Math.random() * 2;
+                            const direction = i % 2 === 0 ? 1 : -1;
                             return (
-                                <div
-                                    key={i}
-                                    className="shaving"
-                                    style={{
-                                        width: `${size}px`,
-                                        height: `${size * 1.2}px`,
-                                        left: `${left}%`,
-                                        top: `${top}%`,
-                                        opacity: opacity,
-                                        transform: `rotate(${rotate}deg)`
-                                    }}
-                                />
+                                <div key={i} className="shaving" style={{
+                                    width: `${size}px`,
+                                    height: `${size * 1.2}px`,
+                                    left: `${left}%`,
+                                    top: `${top}%`,
+                                    opacity,
+                                    transform: `rotate(${rotate}deg)`,
+                                    animationDelay: `${delay}s`,
+                                    "--dir": direction
+                                }} />
                             );
                         })}
                     </div>
                 </div>
-
                 <div className="sweet-row">
                     {[
-                        "/assets/products/sample.png",
+                        "/assets/products/CUP AMERICAN DRYFRUIT.jpeg",
+                        "/assets/products/CUP KESARPISTA.jpeg",
+                        "/assets/products/CUP RAJBHOG.jpeg",
                         "/assets/products/RAJBHOG.jpeg",
-                        "/assets/RAJABAR.png",
-                        "/assets/TWIXCHOCOBAR.png"
+                        "/assets/products/CUP KESARPISTA.jpeg"
                     ].map((src, index) => (
                         <img key={src + index} src={src} alt="Sweet scoop" />
                     ))}
                 </div>
             </section>
 
-
             <Footer />
-
         </div>
-
     );
-
 }
-
