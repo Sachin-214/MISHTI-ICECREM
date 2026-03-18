@@ -205,16 +205,29 @@ export default function Home() {
                 }
             );
 
+            gsap.utils.toArray(".letter").forEach((letter, index) => {
+                gsap.to(letter, {
+                    y: index % 2 === 0 ? -12 : 12,
+                    duration: 1,
+                    ease: "sine.inOut",
+                    yoyo: true,
+                    repeat: -1,
+                    delay: index * 0.05
+                });
+            });
+
             gsap.utils.toArray(".sweet-row img").forEach((img, index) => {
+
+                // Reveal
                 gsap.fromTo(
                     img,
-                    { y: 30, opacity: 0 },
+                    { y: 40, opacity: 0 },
                     {
                         y: 0,
                         opacity: 1,
-                        duration: 0.7,
+                        duration: 0.8,
                         ease: "power3.out",
-                        delay: index * 0.08,
+                        delay: index * 0.1,
                         scrollTrigger: {
                             trigger: ".sweet-section",
                             start: "top 80%",
@@ -222,6 +235,17 @@ export default function Home() {
                         }
                     }
                 );
+
+                // Continuous bounce
+                gsap.to(img, {
+                    y: index % 2 === 0 ? -20 : 20,
+                    rotate: index % 2 === 0 ? -2 : 2,
+                    duration: 1.2,
+                    ease: "sine.inOut",
+                    yoyo: true,
+                    repeat: -1,
+                    delay: index * 0.15
+                });
             });
 
             // Horizontal pinning effect for Exotic Flavors
@@ -248,17 +272,18 @@ export default function Home() {
 
             // Speedy Caramel Droplets Motion
             gsap.utils.toArray(".shaving").forEach((shaving, i) => {
-                const speed = 1.2 + (i % 3); // Varied fast speeds
+                const speed = 1.2 + (i % 3);
+
                 gsap.fromTo(shaving,
-                    { y: 180 }, // Start lower
+                    { y: 0 },
                     {
-                        y: -300, // Move high up
+                        y: 120, // moves downward into images
                         ease: "none",
                         scrollTrigger: {
                             trigger: ".sweet-section",
                             start: "top bottom",
                             end: "bottom top",
-                            scrub: speed // Creates a 'speedy up' effect on scroll down
+                            scrub: speed
                         }
                     }
                 );
@@ -401,12 +426,18 @@ export default function Home() {
                             { name: "Thai Coco-Lime", image: "/assets/TWIXCHOCOBAR.png" },
                             { name: "Moroccan Honey", image: "/assets/products/RAJBHOG.jpeg" }
                         ].map((flavor, index) => (
-                            <article className="popular-card pop-on-scroll" key={index}>
-                                <div className="popular-image">
-                                    <img src={flavor.image} alt={flavor.name} />
-                                </div>
-                                <h3>{flavor.name}</h3>
-                            </article>
+                            <div className="popular-item" key={index}>
+
+                                <article className="popular-card pop-on-scroll">
+                                    <div className="popular-image">
+                                        <img src={flavor.image} alt={flavor.name} />
+                                    </div>
+                                </article>
+
+                                {/* TEXT OUTSIDE */}
+                                <h3 className="popular-name">{flavor.name}</h3>
+
+                            </div>
                         ))}
                     </div>
                 </div>
@@ -630,14 +661,21 @@ export default function Home() {
 
             <section className="sweet-section reveal-on-scroll">
                 <div className="sweet-heading-wrapper">
-                    <h2 className="sweet-title">SWEET COLD CREAMY</h2>
-                    {/* Chocolate Splatter Shavings */}
+
+                    <h2 className="sweet-title">
+                        {"SWEET COLD CREAMY".split("").map((char, i) => (
+                            <span key={i} className="letter">
+                                {char === " " ? "\u00A0" : char}
+                            </span>
+                        ))}
+                    </h2>
+
                     <div className="shaving-splatter">
                         {[...Array(60)].map((_, i) => {
-                            const size = Math.floor(Math.random() * 8) + 4; // 4px to 12px
-                            const left = Math.floor(Math.random() * 110) - 5; // -5% to 105%
-                            const top = Math.floor(Math.random() * 130) - 15; // -15% to 115%
-                            const opacity = Math.random() * 0.4 + 0.6; // 0.6 to 1.0
+                            const size = Math.floor(Math.random() * 8) + 4;
+                            const left = Math.floor(Math.random() * 110) - 5;
+                            const top = Math.floor(Math.random() * 130) - 15;
+                            const opacity = Math.random() * 0.4 + 0.6;
                             const rotate = Math.floor(Math.random() * 360);
 
                             return (
@@ -669,6 +707,7 @@ export default function Home() {
                     ))}
                 </div>
             </section>
+
 
             <Footer />
 
