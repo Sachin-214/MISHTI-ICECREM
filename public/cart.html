@@ -248,7 +248,7 @@
         </div>
 
         <div class="sticky bottom-0 bg-white pt-4 md:relative">
-            <button id="confirmOrder" type="button" class="btn-chocolate w-full py-5 text-sm font-extrabold uppercase tracking-[0.2em]">Confirm & Send Order</button>
+            <button id="confirmOrder" type="submit" class="btn-chocolate w-full py-5 text-sm font-extrabold uppercase tracking-[0.2em]">Confirm & Send Order</button>
         </div>
       </form>
     </div>
@@ -526,18 +526,21 @@
       e.target.value = e.target.value.replace(/\D/g, "").slice(0, 10);
     });
 
-    document.getElementById("confirmOrder").addEventListener("click", async () => {
+    const setConfirmButtonState = (isLoading) => {
       const btn = document.getElementById("confirmOrder");
-      btn.textContent = "Processing Order...";
-      btn.disabled = true;
+      btn.textContent = isLoading ? "Processing Order..." : "Confirm & Send Order";
+      btn.disabled = isLoading;
+    };
+
+    document.getElementById("checkoutForm").addEventListener("submit", async (event) => {
+      event.preventDefault();
+      setConfirmButtonState(true);
 
       const result = await submitOrder();
       if (result.ok) {
         window.location.href = "/success.html";
       } else {
-        alert("Something went wrong. Please check fields.");
-        btn.textContent = "Confirm & Send Order";
-        btn.disabled = false;
+        setConfirmButtonState(false);
       }
     });
 
