@@ -1,0 +1,513 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mishti Admin Dashboard | wholesale</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&family=Nosifer&family=Lilita+One&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-brown: #4E342E;
+      --secondary-brown: #5D4037;
+      --accent-red: #8B2C2C;
+      --bg-light: #f8fafc;
+      --glass: rgba(255, 255, 255, 0.9);
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--bg-light);
+      color: #1e293b;
+    }
+
+    .nosifer { font-family: 'Nosifer', cursive; }
+    .lilita { font-family: 'Lilita One', cursive; }
+
+    .sidebar {
+      background: var(--primary-brown);
+      color: white;
+      transition: all 0.3s ease;
+    }
+
+    .nav-link {
+      padding: 12px 20px;
+      border-radius: 16px;
+      transition: all 0.2s ease;
+      font-weight: 600;
+      opacity: 0.7;
+    }
+
+    .nav-link:hover, .nav-link.active {
+      background: rgba(255, 255, 255, 0.1);
+      opacity: 1;
+      transform: translateX(5px);
+    }
+
+    .stat-card {
+      background: white;
+      border-radius: 24px;
+      padding: 24px;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.02);
+    }
+
+    .order-table {
+      border-collapse: separate;
+      border-spacing: 0 12px;
+    }
+
+    .order-row {
+      background: white;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+      transition: transform 0.2s ease;
+    }
+
+    .order-row:hover {
+      transform: scale(1.005);
+      z-index: 10;
+    }
+
+    .order-row td {
+      padding: 20px 16px;
+      border-top: 1px solid #f1f5f9;
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    .order-row td:first-child { border-left: 1px solid #f1f5f9; border-top-left-radius: 20px; border-bottom-left-radius: 20px; }
+    .order-row td:last-child { border-right: 1px solid #f1f5f9; border-top-right-radius: 20px; border-bottom-right-radius: 20px; }
+
+    .status-pill {
+      padding: 6px 16px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .input-premium {
+      background: white;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 16px;
+      transition: all 0.2s ease;
+    }
+
+    .input-premium:focus {
+      border-color: var(--primary-brown);
+      box-shadow: 0 0 0 4px rgba(78, 52, 46, 0.1);
+      outline: none;
+    }
+
+    .modal-overlay {
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(8px);
+    }
+
+    /* Mobile Responsive Card View */
+    @media (max-width: 1023px) {
+      .desktop-table-header { display: none; }
+      .order-table, .order-table tbody, .order-table tr, .order-table td {
+        display: block;
+        width: 100%;
+      }
+      .order-row {
+        margin-bottom: 20px;
+        padding: 20px;
+        border-radius: 24px;
+        border: 1px solid #eef2f6;
+      }
+      .order-row td {
+        padding: 8px 0;
+        border: none !important;
+      }
+      .sidebar { display: none; }
+      body { padding-bottom: 80px; }
+    }
+
+    /* Bottom Tab Bar */
+    .mobile-tab-bar {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      right: 20px;
+      background: var(--primary-brown);
+      height: 70px;
+      border-radius: 24px;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      z-index: 1000;
+      box-shadow: 0 12px 32px rgba(0,0,0,0.2);
+    }
+    
+    .tab-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: rgba(255,255,255,0.6);
+      min-width: 44px;
+      min-height: 44px;
+      justify-content: center;
+    }
+    .tab-item.active { color: white; }
+    .tab-label { font-size: 10px; font-weight: 700; margin-top: 2px; }
+
+    .btn-chocolate {
+      background: var(--primary-brown);
+      color: white;
+      border-radius: 16px;
+      transition: all 0.2s ease;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex">
+  <!-- Sidebar -->
+  <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 -translate-x-full border-r border-gray-200 bg-[var(--primary-brown)] p-6 transition-transform lg:static lg:translate-x-0">
+    <div class="mb-10 flex items-center gap-3">
+        <div class="h-10 w-10 rounded-xl bg-white flex items-center justify-center text-xl">🍦</div>
+        <span class="nosifer text-sm tracking-tighter text-white">Mishti Admin</span>
+    </div>
+    
+    <nav class="flex flex-col gap-2">
+      <a href="#" class="nav-link active flex items-center gap-3">
+          <span class="text-xl">📦</span> Orders
+      </a>
+      <a href="#" class="nav-link flex items-center gap-3">
+          <span class="text-xl">🏷️</span> Flavors
+      </a>
+      <a href="#" class="nav-link flex items-center gap-3">
+          <span class="text-xl">👥</span> Clients
+      </a>
+      <a href="#" class="nav-link flex items-center gap-3 mt-auto text-red-300">
+          <span class="text-xl">🚪</span> Logout
+      </a>
+    </nav>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="flex-1 flex flex-col p-4 md:p-8 lg:p-12 overflow-x-hidden w-full">
+    <header class="mb-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+      <div class="flex items-center justify-between w-full lg:w-auto">
+        <div>
+          <h1 class="lilita text-4xl text-[var(--primary-brown)]">Wholesale Inbox</h1>
+          <p class="text-sm font-semibold text-gray-500 uppercase tracking-widest mt-1">Real-time order management</p>
+        </div>
+        <div class="lg:hidden h-12 w-12 rounded-xl bg-[var(--primary-brown)] flex items-center justify-center text-xl text-white">🍦</div>
+      </div>
+      
+      <div class="flex flex-col md:flex-row items-center gap-4 w-full md:max-w-2xl">
+          <button onclick="downloadCSV()" class="btn-chocolate w-full md:w-auto whitespace-nowrap px-6 py-4 text-xs font-bold uppercase tracking-widest flex items-center justify-center gap-2">
+              <span>📊</span> Export Excel
+          </button>
+          <div class="relative w-full">
+              <span class="absolute left-4 top-1/2 -translate-y-1/2 opacity-40">🔍</span>
+              <input id="searchInput" type="text" placeholder="Search..." class="input-premium w-full py-4 pl-12 pr-4 text-sm font-medium" />
+          </div>
+      </div>
+    </header>
+
+    <!-- Stats Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+        <div class="stat-card border-l-4 border-yellow-400">
+            <p class="text-[10px] font-extrabold text-gray-400 uppercase tracking-widest">New Requests</p>
+            <h3 class="text-3xl font-bold mt-1" id="statPending">12</h3>
+        </div>
+        <div class="stat-card border-l-4 border-blue-400">
+            <p class="text-[10px] font-extrabold text-gray-400 uppercase tracking-widest">Processing</p>
+            <h3 class="text-3xl font-bold mt-1" id="statConfirmed">45</h3>
+        </div>
+        <div class="stat-card border-l-4 border-green-400">
+            <p class="text-[10px] font-extrabold text-gray-400 uppercase tracking-widest">Success Rate</p>
+            <h3 class="text-3xl font-bold mt-1">98.2%</h3>
+        </div>
+    </div>
+
+    <!-- Table Section -->
+    <section class="flex-1 min-w-0">
+      <div class="overflow-x-auto">
+        <table class="w-full order-table">
+          <thead class="desktop-table-header">
+            <tr class="text-left text-[10px] font-extrabold uppercase tracking-[0.2em] text-gray-400">
+              <th class="pl-6 pb-4">Timestamp</th>
+              <th class="pb-4">Business / Client</th>
+              <th class="pb-4">City</th>
+              <th class="pb-4">Contact</th>
+              <th class="pb-4">Status</th>
+              <th class="pb-4 text-right pr-6">Action</th>
+            </tr>
+          </thead>
+          <tbody id="orderTable">
+            <!-- Dynamic Content -->
+          </tbody>
+        </table>
+      </div>
+      
+      <div id="noResults" class="hidden py-20 text-center">
+          <div class="text-6xl mb-4">🍨</div>
+          <h3 class="text-lg font-bold text-gray-400">No matching orders found</h3>
+      </div>
+    </section>
+  </main>
+
+  <!-- Mobile Tab Bar -->
+  <nav class="mobile-tab-bar lg:hidden">
+    <a href="#" class="tab-item active">
+      <span>📦</span>
+      <span class="tab-label">Orders</span>
+    </a>
+    <a href="#" class="tab-item">
+      <span>🏷️</span>
+      <span class="tab-label">Flavors</span>
+    </a>
+    <a href="#" class="tab-item">
+      <span>👥</span>
+      <span class="tab-label">Clients</span>
+    </a>
+    <a href="/" class="tab-item">
+      <span>🏠</span>
+      <span class="tab-label">Store</span>
+    </a>
+  </nav>
+
+  <!-- Detail Modal -->
+  <div id="itemsModal" class="modal-overlay fixed inset-0 z-50 hidden items-center justify-center p-4">
+    <div class="w-full max-w-lg overflow-hidden rounded-[32px] bg-white shadow-2xl animate-pop">
+      <div class="bg-[var(--primary-brown)] px-8 py-6 text-white flex justify-between items-center">
+        <div>
+          <h2 class="nosifer text-sm">Order Cargo</h2>
+          <p id="modalOrderId" class="text-xs opacity-70 mt-1 uppercase font-bold"></p>
+        </div>
+        <button id="closeModal" class="h-10 w-10 items-center justify-center rounded-full bg-white/10 text-2xl">×</button>
+      </div>
+      <div id="modalContent" class="space-y-3 p-8 max-h-[60vh] overflow-y-auto"></div>
+      <div class="p-6 border-t border-gray-100 flex gap-3">
+          <button id="downloadSingleBtn" class="flex-1 py-3 rounded-xl bg-green-50 text-green-700 border border-green-200 font-bold text-sm hover:bg-green-100 transition-colors shadow-sm">📥 Download Order</button>
+          <button id="callClientBtn" class="flex-1 py-3 rounded-xl bg-[var(--primary-brown)] font-bold text-sm text-white hover:bg-[var(--secondary-brown)] transition-colors shadow-sm">📞 Call Client</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const statusConfig = {
+      Pending: { color: "bg-yellow-100 text-yellow-700", icon: "🟡" },
+      Confirmed: { color: "bg-blue-100 text-blue-700", icon: "🔵" },
+      Delivered: { color: "bg-green-100 text-green-700", icon: "🟢" }
+    };
+
+    const orders = [
+      {
+        id: "#MIC-7829",
+        createdAt: new Date(Date.now() - 15 * 60 * 1000),
+        shopName: "Rajesh Creamery",
+        customerName: "Rajesh Kumar",
+        city: "Rajkot",
+        mobile: "9876543210",
+        email: "rajesh@example.com",
+        address: "M.G Road, Opp. City Bank, Gujarat",
+        status: "Pending",
+        items: [{ flavor: "Kesar Pista", qty: 250 }, { flavor: "Vanilla Royale", qty: 100 }]
+      },
+      {
+        id: "#MIC-7842",
+        createdAt: new Date(Date.now() - 55 * 60 * 1000),
+        shopName: "Ice Bliss Mart",
+        customerName: "Suresh Mehra",
+        city: "Morbi",
+        mobile: "9988776655",
+        email: "suresh@icebliss.com",
+        address: "Crystal Mall, Floor 2, Shop 42",
+        status: "Confirmed",
+        items: [{ flavor: "Mango Alfonso", qty: 500 }]
+      },
+      {
+        id: "#MIC-7851",
+        createdAt: new Date(Date.now() - 4 * 60 * 60 * 1000),
+        shopName: "Sweet Hub Plaza",
+        customerName: "Anjali Singh",
+        city: "Jamnagar",
+        mobile: "9123456789",
+        email: "contact@sweethub.in",
+        address: "Old Town, Gate 4, B-Sector",
+        status: "Delivered",
+        items: [{ flavor: "Choco Fudge", qty: 120 }, { flavor: "Butterscotch", qty: 80 }]
+      }
+    ];
+
+    const orderTable = document.getElementById("orderTable");
+    const searchInput = document.getElementById("searchInput");
+    const itemsModal = document.getElementById("itemsModal");
+    const modalContent = document.getElementById("modalContent");
+
+    const formatTime = (date) => {
+        const h = date.getHours().toString().padStart(2, '0');
+        const m = date.getMinutes().toString().padStart(2, '0');
+        return `${h}:${m}`;
+    };
+
+    const render = () => {
+      const q = searchInput.value.toLowerCase();
+      const filtered = orders.filter(o => 
+        o.shopName.toLowerCase().includes(q) || 
+        o.mobile.includes(q) || 
+        o.id.toLowerCase().includes(q)
+      );
+
+      document.getElementById("noResults").classList.toggle("hidden", filtered.length > 0);
+      
+      orderTable.innerHTML = filtered.map(o => `
+        <tr class="order-row">
+          <td class="pl-6 lg:border-l lg:rounded-l-2xl">
+            <div class="lg:hidden text-[10px] font-bold text-gray-400 uppercase mb-1">Order Time</div>
+            <span class="block font-bold text-gray-900">${formatTime(o.createdAt)}</span>
+            <span class="text-[10px] text-gray-400 font-extrabold uppercase">Today</span>
+          </td>
+          <td>
+            <div class="lg:hidden text-[10px] font-bold text-gray-400 uppercase mb-1">Business</div>
+            <span class="block font-extrabold text-[var(--primary-brown)]">${o.shopName}</span>
+            <span class="text-[10px] text-gray-400 font-semibold">${o.customerName}</span>
+          </td>
+          <td>
+            <div class="lg:hidden text-[10px] font-bold text-gray-400 uppercase mb-1">City</div>
+            <span class="block font-bold text-gray-700">${o.city}</span>
+          </td>
+          <td>
+            <div class="lg:hidden text-[10px] font-bold text-gray-400 uppercase mb-1">Contact</div>
+            <a href="tel:${o.mobile}" class="text-sm font-bold text-blue-600 hover:underline px-3 py-2 bg-blue-50 rounded-lg inline-block lg:bg-transparent lg:p-0">${o.mobile}</a>
+          </td>
+          <td>
+            <div class="lg:hidden text-[10px] font-bold text-gray-400 uppercase mb-2">Order Status</div>
+            <span class="status-pill ${statusConfig[o.status].color}">
+              ${statusConfig[o.status].icon} ${o.status}
+            </span>
+          </td>
+          <td class="text-right pr-6 lg:border-r lg:rounded-r-2xl">
+            <div class="flex items-center justify-end gap-3 mt-4 lg:mt-0">
+              <button onclick="viewItems('${o.id}')" class="h-11 w-11 flex items-center justify-center rounded-xl bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors shadow-sm" title="View Details">👁️</button>
+              <select 
+                onchange="updateStatus('${o.id}', this.value)"
+                class="h-11 px-4 rounded-xl border-gray-200 bg-white text-xs font-bold text-[var(--primary-brown)] focus:ring-2 focus:ring-[var(--primary-brown)] shadow-sm select-premium"
+              >
+                <option value="Pending" ${o.status === "Pending" ? "selected" : ""}>Mark Pending</option>
+                <option value="Confirmed" ${o.status === "Confirmed" ? "selected" : ""}>Mark Confirmed</option>
+                <option value="Delivered" ${o.status === "Delivered" ? "selected" : ""}>Mark Delivered</option>
+              </select>
+            </div>
+          </td>
+        </tr>
+      `).join("");
+
+      document.getElementById("statPending").textContent = orders.filter(o => o.status === "Pending").length;
+      document.getElementById("statConfirmed").textContent = orders.filter(o => o.status === "Confirmed").length;
+    };
+
+    window.viewItems = (id) => {
+      const o = orders.find(x => x.id === id);
+      if(!o) return;
+      document.getElementById("modalOrderId").textContent = o.id;
+      
+      modalContent.innerHTML = `
+        <div class="mb-6 space-y-4">
+           <h3 class="text-[10px] font-extrabold text-gray-400 uppercase tracking-widest border-b border-gray-100 pb-2">Customer Details</h3>
+           <div class="grid grid-cols-2 gap-4">
+              <div>
+                <p class="text-[10px] font-bold text-gray-400 uppercase">Full Name</p>
+                <p class="text-sm font-bold text-gray-800">${o.customerName}</p>
+              </div>
+              <div>
+                <p class="text-[10px] font-bold text-gray-400 uppercase">Business Name</p>
+                <p class="text-sm font-bold text-gray-800">${o.shopName}</p>
+              </div>
+              <div>
+                <p class="text-[10px] font-bold text-gray-400 uppercase">Mobile Number</p>
+                <p class="text-sm font-bold text-blue-600">${o.mobile}</p>
+              </div>
+              <div>
+                <p class="text-[10px] font-bold text-gray-400 uppercase">City</p>
+                <p class="text-sm font-bold text-gray-800">${o.city}</p>
+              </div>
+              <div>
+                <p class="text-[10px] font-bold text-gray-400 uppercase">Email Address</p>
+                <p class="text-sm font-bold text-gray-800">${o.email || 'N/A'}</p>
+              </div>
+           </div>
+           <div>
+              <p class="text-[10px] font-bold text-gray-400 uppercase">Delivery Address</p>
+              <p class="text-sm font-bold text-gray-800 leading-relaxed">${o.address}</p>
+           </div>
+        </div>
+
+        <div class="space-y-3">
+           <h3 class="text-[10px] font-extrabold text-gray-400 uppercase tracking-widest border-b border-gray-100 pb-2">Order Items</h3>
+           ${o.items.map(i => `
+            <div class="flex items-center justify-between p-4 rounded-2xl bg-gray-50 border border-gray-100">
+               <div>
+                  <p class="font-bold text-[var(--primary-brown)]">${i.flavor}</p>
+                  <p class="text-[10px] text-gray-400 uppercase font-extrabold tracking-widest">Wholesale Unit</p>
+               </div>
+               <div class="text-right">
+                  <span class="lilita text-xl text-[var(--accent-red)]">${i.qty}</span>
+                  <span class="text-[10px] font-bold block">Qty</span>
+               </div>
+            </div>
+           `).join("")}
+        </div>
+      `;
+      
+      // Setup Modal Button Actions
+      document.getElementById("downloadSingleBtn").onclick = () => downloadCSV([o], `Order_${o.id}`);
+      document.getElementById("callClientBtn").onclick = () => window.location.href = `tel:${o.mobile}`;
+
+      itemsModal.classList.remove("hidden");
+      itemsModal.classList.add("flex");
+    };
+
+    window.updateStatus = (id, status) => {
+      const o = orders.find(x => x.id === id);
+      if(o) o.status = status;
+      render();
+    };
+
+    window.downloadCSV = (data = orders, filename = `Mishti_Orders_Full`) => {
+      if (data.length === 0) return alert("No orders to export.");
+
+      // CSV Header
+      let csvContent = "Order ID,Shop Name,Customer Name,City,Mobile,Email,Address,Status,Items\n";
+
+      // Rows
+      data.forEach(o => {
+          const itemsStr = o.items.map(i => `${i.flavor} (${i.qty})`).join(" | ");
+          const row = [
+              o.id,
+              `"${o.shopName}"`,
+              `"${o.customerName}"`,
+              `"${o.city}"`,
+              o.mobile,
+              o.email || "",
+              `"${o.address.replace(/"/g, '""')}"`,
+              o.status,
+              `"${itemsStr}"`
+          ].join(",");
+          csvContent += row + "\n";
+      });
+
+      // Download
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.setAttribute("href", url);
+      link.setAttribute("download", `${filename}_${new Date().toLocaleDateString().replace(/\//g, '-')}.csv`);
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    };
+
+    document.getElementById("closeModal").onclick = () => itemsModal.classList.add("hidden");
+    searchInput.oninput = render;
+    
+    // Initial Render
+    render();
+  </script>
+</body>
+</html>

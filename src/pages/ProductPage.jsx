@@ -121,7 +121,11 @@ export default function ProductPage() {
                         Contact Us
                     </a>
                 </div>
-                <button className="floating-cart" aria-label="View shopping cart">
+                <button
+                    className="floating-cart"
+                    aria-label="View shopping cart"
+                    onClick={() => { window.location.href = "/cart.html"; }}
+                >
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <circle cx="9" cy="21" r="1"></circle>
                         <circle cx="20" cy="21" r="1"></circle>

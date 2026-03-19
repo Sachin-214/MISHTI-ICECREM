@@ -1,0 +1,551 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mishti Ice Cream | Cart Review</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&family=Nosifer&family=Lilita+One&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-brown: #4E342E;
+      --secondary-brown: #5D4037;
+      --accent-red: #8B2C2C;
+      --accent-pink: #FF4081;
+      --bg-pink: #fff7f2;
+      --bg-white: #ffffff;
+      --text-main: #1b2a3a;
+      --text-muted: #4e5f71;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--bg-pink);
+      color: var(--text-main);
+      background-image: radial-gradient(circle at 10% 20%, rgba(255, 228, 236, 0.4) 0%, transparent 20%),
+                        radial-gradient(circle at 90% 80%, rgba(232, 246, 230, 0.4) 0%, transparent 20%);
+      min-height: 100vh;
+    }
+
+    .nosifer { font-family: 'Nosifer', cursive; }
+    .lilita { font-family: 'Lilita One', cursive; }
+
+    .header-drip {
+      background-image: url("/assets/images/header-drip.png");
+      background-repeat: repeat-x;
+      background-size: auto 100%;
+      background-position: top center;
+      min-height: 120px;
+      padding-top: 60px;
+    }
+
+    .glass-card {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(78, 52, 46, 0.1);
+      border-radius: 32px;
+      box-shadow: 0 20px 46px rgba(17, 34, 56, 0.08);
+    }
+
+    .btn-chocolate {
+      background: var(--primary-brown);
+      color: white;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      border-radius: 999px;
+      box-shadow: 0 12px 24px rgba(78, 52, 46, 0.3);
+    }
+
+    .btn-chocolate:hover {
+      transform: translateY(-2px) scale(1.02);
+      background: var(--secondary-brown);
+      box-shadow: 0 16px 30px rgba(78, 52, 46, 0.4);
+    }
+
+    .qty-input {
+      border: 1.5px solid rgba(78, 52, 46, 0.15);
+      border-radius: 12px;
+      background: #fdfaf6;
+      transition: border-color 0.2s ease;
+    }
+
+    .qty-input:focus {
+      outline: none;
+      border-color: var(--primary-brown);
+      box-shadow: 0 0 0 4px rgba(78, 52, 46, 0.1);
+    }
+
+    .product-row {
+      transition: all 0.3s ease;
+    }
+
+    .product-row:hover {
+      transform: translateX(8px);
+    }
+
+    .floating-shape {
+      position: absolute;
+      z-index: -1;
+      border-radius: 50%;
+      filter: blur(40px);
+      opacity: 0.4;
+      animation: float 15s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translate(0, 0); }
+      50% { transform: translate(20px, -20px); }
+    }
+
+    /* Custom Mobile Bottom Nav */
+    @media (max-width: 768px) {
+      .mobile-checkout-bar {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(14px);
+        border-top: 1px solid rgba(78, 52, 46, 0.1);
+        bottom: 80px; /* Space for tab bar */
+        border-radius: 20px 20px 0 0;
+        box-shadow: 0 -8px 20px rgba(0,0,0,0.05);
+      }
+      .mobile-tab-bar {
+        position: fixed;
+        bottom: 12px;
+        left: 12px;
+        right: 12px;
+        background: var(--primary-brown);
+        height: 64px;
+        border-radius: 20px;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        z-index: 1000;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+      }
+      .tab-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        color: rgba(255,255,255,0.6);
+        font-size: 10px;
+        font-weight: 700;
+        min-width: 50px;
+        min-height: 48px;
+        justify-content: center;
+      }
+      .tab-item.active { color: white; }
+    }
+
+    button:active { transform: scale(0.96); }
+    input[type="number"] { min-height: 44px; }
+  </style>
+</head>
+<body>
+  <header class="header-drip mb-10 text-center">
+    <div class="mx-auto max-w-6xl px-4">
+      <h1 class="nosifer text-3xl md:text-5xl text-[var(--primary-brown)] tracking-wider">Cart Review</h1>
+      <p class="mt-2 text-sm font-semibold uppercase tracking-[0.2em] text-[var(--accent-red)] opacity-80">Wholesale Order Summary</p>
+    </div>
+  </header>
+
+  <main class="relative mx-auto max-w-6xl px-4 pb-32">
+    <div class="floating-shape bg-pink-200 w-64 h-64 top-20 -left-20"></div>
+    <div class="floating-shape bg-blue-100 w-72 h-72 bottom-40 -right-20" style="animation-delay: -5s;"></div>
+
+    <section class="glass-card p-6 md:p-10">
+      <div id="emptyState" class="hidden flex flex-col items-center justify-center rounded-3xl border-2 border-dashed border-[#f1c9d6] bg-[#fff0f5] p-12 text-center">
+        <div class="mb-4 text-6xl">🍦</div>
+        <h2 class="lilita text-2xl text-[var(--primary-brown)]">Your cart is feeling lonely!</h2>
+        <p class="mt-2 text-[var(--text-muted)]">Add some delicious flavors from the products page to get started.</p>
+        <a href="/#/products" class="mt-6 btn-chocolate px-8 py-3 font-bold uppercase tracking-wide">Browse Products</a>
+      </div>
+
+      <div class="md:hidden">
+        <div id="cartCards" class="space-y-6"></div>
+      </div>
+
+      <div class="hidden md:block">
+        <table class="w-full border-separate border-spacing-y-4">
+          <thead>
+            <tr class="text-left text-xs font-bold uppercase tracking-[0.1em] text-[var(--text-muted)]">
+              <th class="pl-6">Product Item</th>
+              <th>Unit Price</th>
+              <th class="text-center">Quantity (Units)</th>
+              <th class="text-right pr-6">Line Total</th>
+            </tr>
+          </thead>
+          <tbody id="cartTableBody"></tbody>
+        </table>
+      </div>
+
+      <div class="mt-10 flex flex-col items-center justify-between gap-6 border-t border-dashed border-gray-200 pt-8 md:flex-row">
+        <div class="hidden md:block">
+            <p class="text-sm text-[var(--text-muted)]">Minimum wholesale order: <span class="font-bold text-[var(--accent-red)]">10 units per flavor</span></p>
+        </div>
+        <div class="flex items-center gap-6 rounded-2xl bg-[var(--primary-brown)] px-8 py-4 text-white shadow-xl">
+          <span class="text-sm font-bold uppercase tracking-widest opacity-80">Grand Total</span>
+          <span class="grand-total text-3xl font-extrabold nosifer">&#8377;0</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Checkout Bar -->
+  <div class="fixed bottom-0 left-0 right-0 z-40 px-4 py-6 md:static md:bg-transparent md:px-0">
+    <div class="mobile-checkout-bar mx-auto flex max-w-6xl items-center justify-between gap-4 rounded-3xl p-4 md:justify-end">
+      <div class="md:hidden">
+          <p class="text-[8px] font-bold uppercase tracking-tighter text-[var(--text-muted)]">Total Amount</p>
+          <span class="grand-total text-xl font-extrabold text-[var(--primary-brown)]">&#8377;0</span>
+      </div>
+      <button id="placeOrder" class="btn-chocolate w-full px-10 py-5 text-sm font-extrabold uppercase tracking-[0.2em] md:w-auto">
+        Proceed to Checkout
+      </button>
+    </div>
+  </div>
+
+  <nav class="mobile-tab-bar md:hidden">
+    <a href="/index.html#/home" class="tab-item"><span>🏠</span><span>Home</span></a>
+    <a href="/index.html#/products" class="tab-item"><span>🍦</span><span>Scoops</span></a>
+    <a href="/cart.html" class="tab-item active"><span>🛒</span><span>Cart</span></a>
+    <a href="/index.html#/contact" class="tab-item"><span>📞</span><span>Connect</span></a>
+  </nav>
+
+  <!-- Checkout Form Modal -->
+  <div id="checkoutOverlay" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/60 backdrop-blur-sm px-4">
+    <div class="relative w-full max-w-2xl transform overflow-hidden rounded-[40px] bg-white shadow-2xl transition-all">
+      <div class="bg-[var(--primary-brown)] p-8 text-white">
+          <button id="closeCheckout" class="absolute right-6 top-6 h-10 w-10 rounded-full bg-white/10 text-2xl font-light hover:bg-white/20 transition-colors">×</button>
+          <h2 class="nosifer text-2xl">Guest Checkout</h2>
+          <p class="mt-2 text-sm font-semibold uppercase tracking-wider opacity-70">Wholesale Delivery Details</p>
+      </div>
+
+      <form id="checkoutForm" class="max-h-[70vh] space-y-6 overflow-y-auto p-8 pb-32 md:pb-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="space-y-2">
+              <label class="text-xs font-extrabold uppercase tracking-widest text-[var(--text-muted)]">Full Name *</label>
+              <input id="fullName" type="text" required placeholder="Enter name" class="qty-input w-full px-4 py-3 text-sm font-semibold" />
+            </div>
+            <div class="space-y-2">
+              <label class="text-xs font-extrabold uppercase tracking-widest text-[var(--text-muted)]">Business Name *</label>
+              <input id="businessName" type="text" required placeholder="Shop/Business Name" class="qty-input w-full px-4 py-3 text-sm font-semibold" />
+            </div>
+            <div class="space-y-2">
+              <label class="text-xs font-extrabold uppercase tracking-widest text-[var(--text-muted)]">Mobile Number *</label>
+              <input id="mobileNumber" type="tel" maxlength="10" required placeholder="10-digit mobile" class="qty-input w-full px-4 py-3 text-sm font-semibold" />
+              <p id="mobileError" class="hidden text-[10px] font-bold text-red-500">Must be 10 digits.</p>
+            </div>
+            <div class="space-y-2">
+              <label class="text-xs font-extrabold uppercase tracking-widest text-[var(--text-muted)]">Email (Optional)</label>
+              <input id="emailAddress" type="email" placeholder="Email address" class="qty-input w-full px-4 py-3 text-sm font-semibold" />
+            </div>
+            <div class="space-y-2">
+              <label class="text-xs font-extrabold uppercase tracking-widest text-[var(--text-muted)]">City *</label>
+              <input id="city" type="text" required placeholder="e.g. Rajkot" class="qty-input w-full px-4 py-3 text-sm font-semibold" />
+            </div>
+        </div>
+
+        <div class="space-y-2">
+          <label class="text-xs font-extrabold uppercase tracking-widest text-[var(--text-muted)]">Delivery Address *</label>
+          <textarea id="deliveryAddress" required placeholder="Full shop address with landmarks" class="qty-input min-h-[100px] w-full px-4 py-3 text-sm font-semibold"></textarea>
+        </div>
+
+        <div class="sticky bottom-0 bg-white pt-4 md:relative">
+            <button id="confirmOrder" type="button" class="btn-chocolate w-full py-5 text-sm font-extrabold uppercase tracking-[0.2em]">Confirm & Send Order</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const CART_KEY = "mishti_cart";
+    const LAST_ORDER_KEY = "mishti_last_order";
+    const WHOLESALE_MIN = 10;
+    const state = {
+      items: []
+    };
+
+    const cardsContainer = document.getElementById("cartCards");
+    const tableBody = document.getElementById("cartTableBody");
+    const emptyState = document.getElementById("emptyState");
+    const totalLabels = document.querySelectorAll(".grand-total");
+
+    const formatCurrency = (value) => `\u20B9${value.toLocaleString()}`;
+
+    const loadCart = () => {
+      try {
+        const stored = localStorage.getItem(CART_KEY);
+        if (!stored) return [];
+        const parsed = JSON.parse(stored);
+        return Array.isArray(parsed) ? parsed : [];
+      } catch (error) {
+        console.error("Failed to read cart", error);
+        return [];
+      }
+    };
+
+    const saveCart = () => {
+      localStorage.setItem(CART_KEY, JSON.stringify(state.items));
+    };
+
+    const showToast = (message) => {
+      const toast = document.createElement("div");
+      toast.textContent = message;
+      toast.style.cssText = "position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#4E342E;color:#fff;padding:10px 16px;border-radius:999px;font-weight:700;font-size:12px;box-shadow:0 10px 24px rgba(0,0,0,0.2);z-index:9999;";
+      document.body.appendChild(toast);
+      setTimeout(() => toast.remove(), 2000);
+    };
+
+    const updateTotals = () => {
+      const total = state.items.reduce((sum, item) => sum + item.quantity * item.unitPrice, 0);
+      totalLabels.forEach((label) => {
+        label.textContent = formatCurrency(total);
+      });
+    };
+
+    const render = () => {
+      const hasItems = state.items.length > 0;
+      emptyState.classList.toggle("hidden", hasItems);
+      document.querySelector('section.glass-card').classList.toggle("bg-transparent", !hasItems);
+      document.querySelector('section.glass-card').classList.toggle("shadow-none", !hasItems);
+      document.querySelector('section.glass-card').classList.toggle("border-none", !hasItems);
+
+      cardsContainer.innerHTML = state.items
+        .map((item) => {
+          const isInvalid = item.quantity < 10;
+          return `
+            <article class="glass-card overflow-hidden product-row">
+              <div class="flex items-center gap-4 p-4">
+                <div class="h-20 w-20 flex-shrink-0 rounded-2xl bg-[#fff0f5] p-3">
+                    <img src="${item.image}" alt="${item.name}" class="h-full w-full object-contain" loading="lazy" />
+                </div>
+                <div class="flex-1 min-w-0">
+                  <h3 class="text-sm font-extrabold text-[var(--primary-brown)] truncate">${item.name}</h3>
+                  <p class="text-xs font-bold text-[var(--accent-red)] mt-1">${formatCurrency(item.unitPrice)} / unit</p>
+                </div>
+                <div class="text-right">
+                    <div class="text-sm font-extrabold nosifer text-[var(--primary-brown)]">${formatCurrency(item.quantity * item.unitPrice)}</div>
+                </div>
+              </div>
+              <div class="bg-gray-50/50 p-4 flex items-center justify-between gap-3">
+                 <div class="flex items-center gap-2">
+                    <button data-quick-add data-id="${item.id}" data-amount="-10" class="h-10 w-10 rounded-full border border-gray-200 bg-white text-gray-600 hover:bg-gray-100 flex items-center justify-center font-bold text-lg">-</button>
+                    <input
+                      type="number"
+                      data-qty-input
+                      data-id="${item.id}"
+                      value="${item.quantity}"
+                      min="0"
+                      class="w-16 h-10 qty-input text-center text-sm font-bold"
+                    />
+                    <button data-quick-add data-id="${item.id}" data-amount="10" class="h-10 w-10 rounded-full border border-gray-200 bg-white text-gray-600 hover:bg-gray-100 flex items-center justify-center font-bold text-lg">+</button>
+                 </div>
+                 <div class="flex gap-1">
+                    <button data-quick-add data-id="${item.id}" data-amount="50" class="px-3 py-2 text-[10px] font-extrabold uppercase tracking-tighter rounded-lg border border-[var(--primary-brown)] text-[var(--primary-brown)]">+50</button>
+                 </div>
+              </div>
+              ${isInvalid ? `<div class="bg-red-50 px-4 py-2 text-[10px] font-bold text-red-600">Min 10 units for wholesale.</div>` : ''}
+            </article>
+          `;
+        })
+        .join("");
+
+      tableBody.innerHTML = state.items
+        .map((item) => {
+          const isInvalid = item.quantity < 10;
+          return `
+            <tr class="product-row">
+              <td class="pl-6 py-4">
+                <div class="flex items-center gap-4">
+                  <div class="h-16 w-16 flex-shrink-0 rounded-2xl bg-[#fff0f5] p-2">
+                    <img src="${item.image}" alt="${item.name}" class="h-full w-full object-contain" loading="lazy" />
+                  </div>
+                  <div>
+                    <span class="block font-extrabold text-[var(--primary-brown)] text-lg">${item.name}</span>
+                    <span class="text-xs font-semibold text-[var(--text-muted)] uppercase tracking-widest">${item.id}</span>
+                  </div>
+                </div>
+              </td>
+              <td class="py-4">
+                <span class="font-bold text-[var(--text-muted)]">${formatCurrency(item.unitPrice)}</span>
+              </td>
+              <td class="py-4 text-center">
+                <div class="flex items-center justify-center gap-3">
+                    <button data-quick-add data-id="${item.id}" data-amount="-10" class="h-10 w-10 rounded-full border border-gray-200 bg-white text-gray-600 hover:bg-gray-100 flex items-center justify-center font-bold text-lg">-</button>
+                    <input
+                      type="number"
+                      data-qty-input
+                      data-id="${item.id}"
+                      value="${item.quantity}"
+                      min="0"
+                      class="w-20 h-10 qty-input text-center font-bold"
+                    />
+                    <button data-quick-add data-id="${item.id}" data-amount="10" class="h-10 w-10 rounded-full border border-gray-200 bg-white text-gray-600 hover:bg-gray-100 flex items-center justify-center font-bold text-lg">+</button>
+                    <div class="ml-2 flex gap-1">
+                        <button data-quick-add data-id="${item.id}" data-amount="50" class="px-3 py-2 text-[10px] font-extrabold uppercase rounded-lg border border-[var(--primary-brown)] text-[var(--primary-brown)] hover:bg-[var(--primary-brown)] hover:text-white transition-colors">+50</button>
+                    </div>
+                </div>
+                ${isInvalid ? `<p class="mt-1 text-[10px] font-bold text-red-500">Min wholesale: 10 units</p>` : ''}
+              </td>
+              <td class="py-4 text-right pr-6">
+                <span class="nosifer text-lg font-bold text-[var(--primary-brown)]">${formatCurrency(item.quantity * item.unitPrice)}</span>
+              </td>
+            </tr>
+          `;
+        })
+        .join("");
+
+      updateTotals();
+    };
+
+    const updateItemQuantity = (id, quantity) => {
+      const item = state.items.find((entry) => String(entry.id) === String(id));
+      if (!item) return;
+      const nextQty = Number.isFinite(quantity) ? quantity : 0;
+      if (nextQty < WHOLESALE_MIN) {
+        item.quantity = WHOLESALE_MIN;
+        showToast("Minimum order is 10 units");
+      } else {
+        item.quantity = nextQty;
+      }
+      saveCart();
+      render();
+    };
+
+    const validateForm = () => {
+      const fullName = document.getElementById("fullName");
+      const mobileNumber = document.getElementById("mobileNumber");
+      const businessName = document.getElementById("businessName");
+      const deliveryAddress = document.getElementById("deliveryAddress");
+      const mobileError = document.getElementById("mobileError");
+
+      let isValid = true;
+      const inputs = [fullName, mobileNumber, businessName, deliveryAddress];
+      
+      inputs.forEach(input => {
+          if (!input.value.trim()) {
+            isValid = false;
+            input.classList.add("border-red-400", "ring-2", "ring-red-200");
+          } else {
+            input.classList.remove("border-red-400", "ring-2", "ring-red-200");
+          }
+      });
+
+      const mobileValue = mobileNumber.value.replace(/\D/g, "");
+      if (mobileValue.length !== 10) {
+        isValid = false;
+        mobileNumber.classList.add("border-red-400", "ring-2", "ring-red-200");
+        mobileError.classList.remove("hidden");
+      } else {
+        mobileError.classList.add("hidden");
+      }
+
+      return isValid;
+    };
+
+    const prepareOrderPayload = () => {
+      if (state.items.length === 0) {
+        alert("Your cart is empty.");
+        return null;
+      }
+
+      if (!validateForm()) {
+        alert("Please complete all required fields correctly.");
+        return null;
+      }
+
+      const name = document.getElementById("fullName").value.trim();
+      const phone = document.getElementById("mobileNumber").value.trim();
+      const email = document.getElementById("emailAddress").value.trim();
+
+      const product = state.items.map((item) => ({
+        name: item.name,
+        amount: item.unitPrice,
+        qty: item.quantity
+      }));
+
+      return {
+        name,
+        email,
+        phone,
+        product
+      };
+    };
+
+    const submitOrder = async () => {
+      const payload = prepareOrderPayload();
+      if (!payload) return { ok: false };
+
+      try {
+        const response = await fetch("http://localhost:5000/api/users", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          throw new Error(errorData.message || "Order request failed");
+        }
+
+        localStorage.setItem(LAST_ORDER_KEY, JSON.stringify(payload));
+        localStorage.removeItem(CART_KEY);
+        return { ok: true };
+      } catch (error) {
+        alert(error.message || "Unable to place order.");
+        return { ok: false };
+      }
+    };
+
+    document.addEventListener("input", (event) => {
+      if (event.target.closest("[data-qty-input]")) {
+        const input = event.target;
+        updateItemQuantity(input.dataset.id, parseInt(input.value || "0", 10));
+      }
+    });
+
+    document.addEventListener("click", (event) => {
+      const quickAdd = event.target.closest("[data-quick-add]");
+      if (quickAdd) {
+        const amount = parseInt(quickAdd.dataset.amount || "0", 10);
+        const item = state.items.find((entry) => String(entry.id) === String(quickAdd.dataset.id));
+        if (item) updateItemQuantity(item.id, item.quantity + amount);
+      }
+    });
+
+    const overlay = document.getElementById("checkoutOverlay");
+    document.getElementById("placeOrder").addEventListener("click", () => {
+        if(state.items.length === 0) return alert("Add items first!");
+        overlay.classList.remove("hidden");
+        overlay.classList.add("flex");
+    });
+
+    document.getElementById("closeCheckout").addEventListener("click", () => {
+      overlay.classList.add("hidden");
+      overlay.classList.remove("flex");
+    });
+
+    document.getElementById("mobileNumber").addEventListener("input", (e) => {
+      e.target.value = e.target.value.replace(/\D/g, "").slice(0, 10);
+    });
+
+    document.getElementById("confirmOrder").addEventListener("click", async () => {
+      const btn = document.getElementById("confirmOrder");
+      btn.textContent = "Processing Order...";
+      btn.disabled = true;
+
+      const result = await submitOrder();
+      if (result.ok) {
+        window.location.href = "/success.html";
+      } else {
+        alert("Something went wrong. Please check fields.");
+        btn.textContent = "Confirm & Send Order";
+        btn.disabled = false;
+      }
+    });
+
+    state.items = loadCart();
+    render();
+  </script>
+</body>
+</html>
+
+
+
